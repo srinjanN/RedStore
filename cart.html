@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shopping Cart — RedStore</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<div class="container">
+  <div class="navbar">
+    <div class="logo"><a href="index.html"><img src="images/logo.png" width="130px"></a></div>
+    <div class="navbar-search-wrap">
+      <input type="text" id="navbar-search" placeholder="Search products…">
+    </div>
+    <nav>
+      <ul id="MenuItems">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="products.html">Products</a></li>
+        <li><a href="news.html">News</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="account.html" id="nav-account">Account</a></li>
+      </ul>
+    </nav>
+    <a href="cart.html" class="cart-icon-wrap">
+      <img src="images/cart.png" width="28px" height="28px">
+      <span id="cart-badge">0</span>
+    </a>
+    <img src="images/menu.png" class="menu-icon" onclick="toggleMenu()">
+  </div>
+</div>
+
+<div class="small-container cart-page">
+  <h2>🛒 Shopping Cart</h2>
+  
+  <!-- Cart Table -->
+  <div id="cart-content">
+    <div style="text-align:center;padding:80px 20px;" id="empty-cart">
+      <i class="fa fa-cart-shopping" style="font-size:64px;color:#ddd;"></i>
+      <p style="margin:20px 0 10px;font-size:18px;font-weight:600;color:#aaa;">Your cart is empty</p>
+      <p style="font-size:14px;color:#bbb;margin-bottom:24px;">Add some products to get started!</p>
+      <a href="products.html" class="btn">Browse Products</a>
+    </div>
+    <div id="cart-table-wrap" style="display:none;">
+      <table>
+        <tr>
+          <th>Product</th>
+          <th style="text-align:center;">Quantity</th>
+          <th>Subtotal</th>
+        </tr>
+        <tbody id="cart-rows"></tbody>
+      </table>
+
+      <!-- Coupon -->
+      <div style="margin-top:24px;">
+        <p style="font-size:14px;font-weight:600;margin-bottom:10px;">Have a coupon?</p>
+        <div class="coupon-row">
+          <input type="text" id="coupon-input" placeholder="ENTER CODE" maxlength="20">
+          <button class="btn btn-sm" onclick="applyCoupon()">Apply</button>
+          <button class="btn-outline btn-sm" onclick="removeCoupon()" id="remove-coupon-btn" style="display:none;">Remove</button>
+        </div>
+        <div id="coupon-msg" class="coupon-msg"></div>
+        <p style="font-size:12px;color:#aaa;margin-top:4px;">Try: <strong>REDSTORE10</strong>, <strong>SAVE20</strong>, <strong>WELCOME15</strong></p>
+      </div>
+
+      <!-- Totals -->
+      <div class="total-price">
+        <table>
+          <tr><td>Subtotal</td><td id="total-subtotal">$0.00</td></tr>
+          <tr id="discount-row" style="display:none;"><td style="color:var(--green);">Discount</td><td id="total-discount" style="color:var(--green);">-$0.00</td></tr>
+          <tr><td>Shipping</td><td id="total-shipping">$0.00</td></tr>
+          <tr><td>Tax (18%)</td><td id="total-tax">$0.00</td></tr>
+          <tr style="border-top:2px solid var(--border);"><td><strong>Total</strong></td><td id="total-amount">$0.00</td></tr>
+        </table>
+      </div>
+
+      <div class="cart-actions">
+        <button class="btn-outline" onclick="clearCart()">
+          <i class="fa fa-trash" style="margin-right:8px;"></i>Clear Cart
+        </button>
+        <button class="btn" onclick="showCheckout()">
+          Proceed to Checkout <i class="fa fa-arrow-right" style="margin-left:8px;"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHECKOUT SECTION -->
+  <div class="checkout-section" id="checkout-section" style="display:none;">
+    <h3>📦 Delivery & Payment</h3>
+
+    <p style="font-size:14px;font-weight:600;margin-bottom:14px;">Delivery Address</p>
+    <div class="form-row">
+      <div class="form-group">
+        <label>First Name *</label>
+        <input type="text" id="ch-fname" placeholder="John">
+      </div>
+      <div class="form-group">
+        <label>Last Name *</label>
+        <input type="text" id="ch-lname" placeholder="Doe">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Email *</label>
+        <input type="email" id="ch-email" placeholder="john@email.com">
+      </div>
+      <div class="form-group">
+        <label>Phone *</label>
+        <input type="tel" id="ch-phone" placeholder="+91 98765 43210">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group" style="flex:2;">
+        <label>Street Address *</label>
+        <input type="text" id="ch-street" placeholder="123 Main Street">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>City *</label>
+        <input type="text" id="ch-city" placeholder="Kolkata">
+      </div>
+      <div class="form-group">
+        <label>State</label>
+        <input type="text" id="ch-state" placeholder="West Bengal">
+      </div>
+      <div class="form-group">
+        <label>PIN Code *</label>
+        <input type="text" id="ch-pin" placeholder="700001">
+      </div>
+    </div>
+
+    <p style="font-size:14px;font-weight:600;margin:20px 0 12px;">Payment Method</p>
+    <div class="payment-options">
+      <div class="payment-option selected" onclick="selectPayment(this,'COD')">
+        <i class="fa fa-money-bill-wave"></i>
+        <span>Cash on Delivery</span>
+      </div>
+      <div class="payment-option" onclick="selectPayment(this,'CARD')">
+        <i class="fa fa-credit-card"></i>
+        <span>Credit/Debit Card</span>
+      </div>
+      <div class="payment-option" onclick="selectPayment(this,'UPI')">
+        <i class="fa fa-mobile-alt"></i>
+        <span>UPI / Wallet</span>
+      </div>
+      <div class="payment-option" onclick="selectPayment(this,'NETBANK')">
+        <i class="fa fa-university"></i>
+        <span>Net Banking</span>
+      </div>
+    </div>
+
+    <!-- Card fields (shown only when CARD selected) -->
+    <div id="card-fields" style="display:none;background:var(--white);padding:16px;border-radius:10px;border:1.5px solid var(--border);margin-bottom:16px;">
+      <div class="form-row">
+        <div class="form-group" style="flex:2;">
+          <label>Card Number</label>
+          <input type="text" id="ch-cardno" placeholder="1234 5678 9012 3456" maxlength="19" oninput="formatCard(this)">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Expiry (MM/YY)</label>
+          <input type="text" id="ch-expiry" placeholder="MM/YY" maxlength="5">
+        </div>
+        <div class="form-group">
+          <label>CVV</label>
+          <input type="password" id="ch-cvv" placeholder="•••" maxlength="3">
+        </div>
+        <div class="form-group">
+          <label>Name on Card</label>
+          <input type="text" id="ch-cardname" placeholder="John Doe">
+        </div>
+      </div>
+    </div>
+
+    <div id="checkout-error" style="display:none;"></div>
+
+    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:10px;">
+      <button class="btn-outline" onclick="document.getElementById('checkout-section').style.display='none';">← Back to Cart</button>
+      <button class="btn" onclick="placeOrder()" id="place-order-btn">
+        <i class="fa fa-lock" style="margin-right:8px;"></i>Place Order
+      </button>
+    </div>
+
+    <p style="font-size:11px;color:#aaa;margin-top:12px;"><i class="fa fa-shield-halved" style="color:var(--green);margin-right:4px;"></i>Your payment information is secure and encrypted.</p>
+  </div>
+
+  <!-- ORDER SUCCESS -->
+  <div class="success-page" id="order-success" style="display:none;">
+    <div class="success-icon"><i class="fa fa-circle-check"></i></div>
+    <h1>Order Placed!</h1>
+    <p style="font-size:16px;margin-bottom:8px;">Thank you for shopping with RedStore.</p>
+    <p id="order-id-msg" style="font-size:13px;color:#aaa;margin-bottom:24px;"></p>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+      <a href="account.html#orders" class="btn">View My Orders</a>
+      <a href="products.html" class="btn-outline">Continue Shopping</a>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="container">
+    <div class="row">
+      <div class="footer-col-1">
+        <h3>Download Our App</h3>
+        <p>Download App for Android and iOS.</p>
+        <div class="app-logo"><img src="images/play-store.png"><img src="images/app-store.png"></div>
+      </div>
+      <div class="footer-col-2">
+        <img src="images/logo-white.png">
+        <p>Our Purpose Is To Sustainably Make the Pleasure and Benefits of Sports Accessible to the Many.</p>
+      </div>
+      <div class="footer-col-3"><h3>Useful Links</h3><ul><li>Coupons</li><li>Blog Post</li><li>Return Policy</li><li>Join Affiliate</li></ul></div>
+      <div class="footer-col-4"><h3>Follow Us</h3><ul><li>Facebook</li><li>Twitter</li><li>Instagram</li><li>YouTube</li></ul></div>
+    </div>
+    <hr>
+    <p class="copyright">© 2026 RedStore. All Rights Reserved.</p>
+  </div>
+</div>
+
+<script src="app.js"></script>
+<script>
+
+if (typeof store === "undefined") {
+  var store = {
+    getToken:    function() { return localStorage.getItem("rs_token"); },
+    getUser:     function() { try { return JSON.parse(localStorage.getItem("rs_user")); } catch(e) { return null; } },
+    setSession:  function(tok,user) { localStorage.setItem("rs_token",tok); localStorage.setItem("rs_user",JSON.stringify(user)); },
+    clearSession:function() { localStorage.removeItem("rs_token"); localStorage.removeItem("rs_user"); },
+    isLoggedIn:  function() { return !!localStorage.getItem("rs_token"); }
+  };
+}
+if (typeof cart === 'undefined' || typeof cart.remove === 'undefined') {
+  var cart = {
+    get: function() {
+      try { return JSON.parse(localStorage.getItem('rs_cart')) || []; } catch(e) { return []; }
+    },
+    save: function(items) {
+      localStorage.setItem('rs_cart', JSON.stringify(items));
+      this.updateBadge();
+    },
+    add: function(product, qty, size, color) {
+      qty = qty || 1; size = size || ''; color = color || '';
+      var items = this.get();
+      var key   = product.id + '-' + size + '-' + color;
+      var ex    = items.find(function(i) { return i.key === key; });
+      if (ex) { ex.quantity += qty; }
+      else { items.push({ key: key, productId: product.id, name: product.name, price: product.price, image: product.image || '', quantity: qty, size: size, color: color }); }
+      this.save(items);
+      this.showToast('"' + product.name + '" added to cart!');
+    },
+    remove: function(key) {
+      this.save(this.get().filter(function(i) { return i.key !== key; }));
+    },
+    update: function(key, qty) {
+      var items = this.get();
+      var item  = items.find(function(i) { return i.key === key; });
+      if (item) {
+        if (qty <= 0) { this.remove(key); return; }
+        item.quantity = qty;
+        this.save(items);
+      }
+    },
+    clear: function() { this.save([]); },
+    count: function() {
+      return this.get().reduce(function(s, i) { return s + i.quantity; }, 0);
+    },
+    subtotal: function() {
+      return this.get().reduce(function(s, i) { return s + i.price * i.quantity; }, 0);
+    },
+    updateBadge: function() {
+      var b = document.getElementById('cart-badge');
+      if (b) { var c = this.count(); b.textContent = c; b.style.display = c > 0 ? 'flex' : 'none'; }
+    },
+    showToast: function(msg) {
+      var t = document.getElementById('rs-toast');
+      if (!t) {
+        t = document.createElement('div');
+        t.id = 'rs-toast';
+        t.style.cssText = 'position:fixed;bottom:24px;right:24px;background:#ff523b;color:#fff;padding:11px 18px;border-radius:8px;font-size:13px;font-weight:600;z-index:9999;transform:translateY(60px);transition:transform .3s;font-family:Poppins,sans-serif;max-width:260px;box-shadow:0 4px 16px rgba(255,82,59,.4);';
+        document.body.appendChild(t);
+      }
+      t.textContent = msg;
+      t.style.transform = 'translateY(0)';
+      clearTimeout(t._t);
+      t._t = setTimeout(function() { t.style.transform = 'translateY(60px)'; }, 2800);
+    }
+  };
+}
+if (typeof fmt === "undefined") { var fmt = function(n) { return "$"+Number(n).toFixed(2); }; }
+if (typeof starsHTML === "undefined") { var starsHTML = function(r) { var h="";for(var i=1;i<=5;i++)h+=i<=r?'<i class="fa fa-star" style="color:#ff523b;font-size:12px;"></i>':'<i class="fa-regular fa-star" style="color:#ff523b;font-size:12px;"></i>';return h; }; }
+
+function toggleMenu() { document.getElementById('MenuItems').classList.toggle('open'); }
+
+let appliedCoupon = null;
+let selectedPayment = 'COD';
+let orderSummary = { subtotal: 0, tax: 0, shipping: 0, discount: 0, total: 0 };
+
+function selectPayment(el, method) {
+  document.querySelectorAll('.payment-option').forEach(p => p.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedPayment = method;
+  document.getElementById('card-fields').style.display = method === 'CARD' ? 'block' : 'none';
+}
+
+function formatCard(input) {
+  let v = input.value.replace(/\D/g, '').substring(0, 16);
+  input.value = v.replace(/(.{4})/g, '$1 ').trim();
+}
+
+async function renderCart() {
+  const items = cart.get();
+
+  if (!items.length) {
+    document.getElementById('empty-cart').style.display = 'block';
+    document.getElementById('cart-table-wrap').style.display = 'none';
+    document.getElementById('checkout-section').style.display = 'none';
+    return;
+  }
+
+  document.getElementById('empty-cart').style.display = 'none';
+  document.getElementById('cart-table-wrap').style.display = 'block';
+
+  // Render cart rows immediately (no API needed)
+  const tbody = document.getElementById('cart-rows');
+  tbody.innerHTML = items.map(item => `
+    <tr>
+      <td>
+        <div class="cart-info">
+          <img src="${item.image}" alt="${item.name}">
+          <div>
+            <div class="item-name">${item.name}</div>
+            <div class="item-variant">${[item.size && 'Size: ' + item.size, item.color && 'Color: ' + item.color].filter(Boolean).join(' · ') || ''}</div>
+            <div class="item-price">${fmt(item.price)} each</div>
+            <button class="remove-btn" onclick="removeItem('${item.key}')"><i class="fa fa-trash" style="margin-right:4px;"></i>Remove</button>
+          </div>
+        </div>
+      </td>
+      <td style="text-align:center;">
+        <input type="number" value="${item.quantity}" min="1" max="99" onchange="updateQty('${item.key}', this.value)" style="width:60px;text-align:center;border:1.5px solid var(--border);border-radius:6px;padding:6px;font-size:14px;outline:none;font-family:Poppins,sans-serif;">
+      </td>
+      <td>${fmt(item.price * item.quantity)}</td>
+    </tr>`).join('');
+
+  // Calculate totals locally (no API needed)
+  const subtotal = items.reduce(function(s,i){return s + i.price * i.quantity;}, 0);
+  const tax      = Math.round(subtotal * 0.18 * 100) / 100;
+  const shipping = subtotal > 200 ? 0 : 15;
+  const discount = appliedCoupon ? appliedCoupon.discount : 0;
+  const total    = subtotal - discount + tax + shipping;
+
+  orderSummary = { subtotal, tax, shipping, discount, total };
+
+  document.getElementById('total-subtotal').textContent = fmt(subtotal);
+  document.getElementById('total-tax').textContent      = fmt(tax);
+  document.getElementById('total-shipping').textContent = shipping === 0 ? '🎉 FREE' : fmt(shipping);
+  document.getElementById('total-amount').textContent   = fmt(total);
+
+  if (discount > 0) {
+    document.getElementById('discount-row').style.display = 'table-row';
+    document.getElementById('total-discount').textContent = `-${fmt(discount)}`;
+  } else {
+    document.getElementById('discount-row').style.display = 'none';
+  }
+}
+
+function removeItem(key) {
+  cart.remove(key);
+  renderCart();
+}
+
+function updateQty(key, qty) {
+  cart.update(key, parseInt(qty));
+  renderCart();
+}
+
+async function applyCoupon() {
+  const code = document.getElementById('coupon-input').value.trim().toUpperCase();
+  if (!code) return;
+  const msg = document.getElementById('coupon-msg');
+  const items = cart.get();
+  const subtotal = items.reduce(function(s,i){return s + i.price * i.quantity;}, 0);
+
+  // Built-in coupon codes (work offline)
+  const LOCAL_COUPONS = {
+    'REDSTORE10': { type:'percent', discount:10 },
+    'SAVE20':     { type:'fixed',   discount:20 },
+    'WELCOME15':  { type:'percent', discount:15 },
+  };
+
+  let discount = 0;
+  let message  = '';
+
+  // Try API first
+  let usedAPI = false;
+  try {
+    const res  = await fetch('/api/cart/coupon', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ code, subtotal }),
+      signal: AbortSignal.timeout(3000)
+    });
+    const data = await res.json();
+    if (res.ok) {
+      discount = data.discount;
+      message  = data.message;
+      usedAPI  = true;
+    } else {
+      msg.className   = 'coupon-msg error';
+      msg.textContent = data.message || 'Invalid coupon code.';
+      return;
+    }
+  } catch (_) { /* offline */ }
+
+  // Offline coupon check
+  if (!usedAPI) {
+    const coupon = LOCAL_COUPONS[code];
+    if (!coupon) {
+      msg.className   = 'coupon-msg error';
+      msg.textContent = 'Invalid or expired coupon code.';
+      return;
+    }
+    discount = coupon.type === 'percent'
+      ? Math.round(subtotal * coupon.discount / 100 * 100) / 100
+      : Math.min(coupon.discount, subtotal);
+    message = 'Coupon applied! You save $' + discount.toFixed(2);
+  }
+
+  appliedCoupon = { code: code, discount: discount };
+  msg.className   = 'coupon-msg success';
+  msg.textContent = message;
+  document.getElementById('remove-coupon-btn').style.display = 'inline-block';
+  renderCart();
+}
+
+function removeCoupon() {
+  appliedCoupon = null;
+  document.getElementById('coupon-msg').textContent = '';
+  document.getElementById('coupon-input').value = '';
+  document.getElementById('remove-coupon-btn').style.display = 'none';
+  renderCart();
+}
+
+function clearCart() {
+  if (typeof cart !== 'undefined') cart.clear();
+  else { localStorage.setItem('rs_cart', '[]'); }
+  renderCart();
+}
+
+function showCheckout() {
+  document.getElementById('checkout-section').style.display = 'block';
+  document.getElementById('checkout-section').scrollIntoView({ behavior: 'smooth' });
+  // Pre-fill from profile if logged in
+  if (typeof store !== 'undefined' && store.isLoggedIn()) {
+    var user = store.getUser();
+    if (user) {
+      document.getElementById('ch-email').value = user.email    || '';
+      document.getElementById('ch-fname').value = user.username || '';
+    }
+  }
+}
+
+async function placeOrder() {
+  const fname  = document.getElementById('ch-fname').value.trim();
+  const lname  = document.getElementById('ch-lname').value.trim();
+  const email  = document.getElementById('ch-email').value.trim();
+  const phone  = document.getElementById('ch-phone').value.trim();
+  const street = document.getElementById('ch-street').value.trim();
+  const city   = document.getElementById('ch-city').value.trim();
+  const pin    = document.getElementById('ch-pin').value.trim();
+
+  const errEl = document.getElementById('checkout-error');
+  errEl.style.display = 'none';
+
+  if (!fname || !email || !phone || !street || !city || !pin) {
+    errEl.innerHTML = '<div class="rs-banner" style="padding:12px 20px;border-radius:6px;font-size:13px;background:#fff0ef;color:#d63031;border-left:4px solid #d63031;">Please fill in all required fields.</div>';
+    errEl.style.display = 'block';
+    return;
+  }
+
+  var btn = document.getElementById('place-order-btn');
+  var origText = btn.textContent;
+  btn.innerHTML = '<i class="fa fa-spinner fa-spin" style="margin-right:8px;"></i>Placing Order…';
+  btn.disabled = true;
+
+  var stateVal = document.getElementById('ch-state') ? document.getElementById('ch-state').value : '';
+  var address = { name: fname + ' ' + lname, email: email, phone: phone, street: street, city: city, state: stateVal, pin: pin };
+  var items = (typeof cart !== 'undefined') ? cart.get() : (function(){ try{return JSON.parse(localStorage.getItem('rs_cart'))||[];}catch(e){return[];} })();
+
+  let placed = false;
+  let orderId = '';
+  let estDelivery = new Date(Date.now() + 5 * 86400000);
+
+  // Try API
+  try {
+    const payload = {
+      items, address,
+      paymentMethod: selectedPayment,
+      couponCode: appliedCoupon ? appliedCoupon.code : null,
+      subtotal: orderSummary.subtotal,
+      tax: orderSummary.tax,
+      shipping: orderSummary.shipping,
+      total: orderSummary.total
+    };
+    const res  = await fetch('/api/orders', {
+      method: 'POST',
+      headers: { 'Content-Type':'application/json', 'Authorization':'Bearer ' + (store.getToken() || '') },
+      body: JSON.stringify(payload),
+      signal: AbortSignal.timeout(4000)
+    });
+    const data = await res.json();
+    if (res.ok && data.order) {
+      orderId     = data.order.id;
+      estDelivery = new Date(data.order.estimatedDelivery);
+      placed      = true;
+    }
+  } catch (_) { /* offline */ }
+
+  // Offline order save
+  if (!placed) {
+    const user = store.getUser();
+    orderId = 'ORD-' + Date.now().toString().slice(-8);
+    const localOrder = {
+      id: orderId,
+      orderId: orderId,
+      userEmail: user ? user.email : 'guest',
+      items: items,
+      address: address,
+      paymentMethod: selectedPayment,
+      subtotal: orderSummary.subtotal,
+      tax: orderSummary.tax,
+      shipping: orderSummary.shipping,
+      total: orderSummary.total,
+      status: 'confirmed',
+      createdAt: new Date().toISOString(),
+      estimatedDelivery: estDelivery.toISOString()
+    };
+    try {
+      const existing = JSON.parse(localStorage.getItem('rs_local_orders') || '[]');
+      existing.push(localOrder);
+      localStorage.setItem('rs_local_orders', JSON.stringify(existing));
+    } catch(_) {}
+    placed = true;
+  }
+
+  btn.innerHTML = '<i class="fa fa-lock" style="margin-right:8px;"></i>Place Order';
+  btn.disabled = false;
+
+  if (placed) {
+    if (typeof cart !== 'undefined') cart.clear(); else localStorage.setItem('rs_cart','[]');
+    document.getElementById('cart-table-wrap').style.display = 'none';
+    document.getElementById('checkout-section').style.display = 'none';
+    document.getElementById('empty-cart').style.display = 'none';
+    document.getElementById('order-success').style.display = 'block';
+    document.getElementById('order-id-msg').textContent = 'Order ID: ' + orderId + ' · Estimated delivery: ' + estDelivery.toDateString();
+    window.scrollTo(0, 0);
+  } else {
+    errEl.innerHTML = '<div style="padding:12px 20px;border-radius:6px;font-size:13px;background:#fff0ef;color:#d63031;border-left:4px solid #d63031;">Failed to place order. Please try again.</div>';
+    errEl.style.display = 'block';
+  }
+}
+
+if (store.isLoggedIn()) {
+  const u = store.getUser();
+  document.getElementById('nav-account').textContent = u?.username || 'Profile';
+}
+
+renderCart();
+</script>
+</body>
+</html>

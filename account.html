@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Account — RedStore</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    .auth-wrap{min-height:70vh;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse at 50% 0%,#ffd6d6 0%,#fff 60%);padding:40px 20px}
+    .auth-card{background:#fff;border-radius:16px;box-shadow:0 8px 40px rgba(255,82,59,.12);padding:32px 28px;width:100%;max-width:380px}
+    .auth-logo{text-align:center;margin-bottom:22px}
+    .auth-logo span{font-family:'Playfair Display',serif;font-size:26px;font-weight:800;color:var(--red)}
+    .auth-logo p{font-size:13px;color:var(--gray);margin-top:4px}
+    .auth-tabs{display:flex;border-bottom:2px solid var(--border);margin-bottom:20px}
+    .auth-tab{flex:1;text-align:center;padding:10px;font-size:13px;font-weight:700;color:var(--gray);border-bottom:3px solid transparent;margin-bottom:-2px;cursor:pointer;transition:all .2s}
+    .auth-tab.active{color:var(--red);border-bottom-color:var(--red)}
+    .field{margin-bottom:12px}
+    .field label{display:block;font-size:11px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px}
+    .field .pw-wrap{position:relative}
+    .field .pw-wrap input{padding-right:36px;width:100%}
+    .field .pw-wrap i{position:absolute;right:11px;top:50%;transform:translateY(-50%);cursor:pointer;color:#aaa;font-size:13px}
+    .field .pw-wrap i:hover{color:var(--red)}
+    .field input{width:100%;padding:10px 13px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:'Poppins',sans-serif;outline:none;transition:border .2s}
+    .field input:focus{border-color:var(--red)}
+    .field input:disabled{background:#f9f9f9;color:#aaa}
+    .rs-alert{padding:10px 13px;border-radius:7px;font-size:12px;font-weight:500;margin-bottom:12px;display:none}
+    .rs-alert.show{display:block}
+    .rs-alert.err{background:#fff0ef;color:#c0392b;border-left:4px solid #c0392b}
+    .rs-alert.ok{background:#e8faf0;color:#00b894;border-left:4px solid #00b894}
+    .rs-alert.info{background:#e8f4ff;color:#0d6efd;border-left:4px solid #0d6efd;display:block}
+    .auth-foot{font-size:12px;color:#aaa;text-align:center;margin-top:14px}
+    .auth-foot a{color:var(--red);font-weight:700;cursor:pointer}
+    .forgot-lnk{font-size:11px;color:var(--red);cursor:pointer;text-align:right;display:block;margin:-4px 0 10px}
+
+    /* Dashboard */
+    .dash-page{padding:28px 0 60px}
+    .profile-bar{background:#fff;border:1px solid var(--border);border-radius:14px;padding:18px 22px;display:flex;align-items:center;gap:14px;margin-bottom:20px;flex-wrap:wrap}
+    .big-av{width:52px;height:52px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;font-weight:800;flex-shrink:0}
+    .profile-bar h2{font-size:16px;font-weight:700;margin-bottom:2px}
+    .profile-bar p{font-size:12px;color:var(--gray)}
+    .verified{font-size:11px;color:var(--green);font-weight:600;margin-top:2px}
+    .logout-btn{margin-left:auto;padding:7px 16px;border:1.5px solid var(--border);border-radius:20px;font-size:12px;font-weight:700;background:#fff;color:var(--gray);cursor:pointer;transition:all .2s;font-family:'Poppins',sans-serif}
+    .logout-btn:hover{border-color:var(--red);color:var(--red)}
+    .dash-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:12px;margin-bottom:20px}
+    .ds{background:var(--light);border-radius:10px;padding:14px;text-align:center}
+    .ds .n{font-size:22px;font-weight:800;color:var(--red);font-family:'Playfair Display',serif}
+    .ds .l{font-size:11px;color:var(--gray);margin-top:3px}
+    .dash-tabs{display:flex;border-bottom:2px solid var(--border);margin-bottom:18px;overflow-x:auto;scrollbar-width:none}
+    .dash-tabs::-webkit-scrollbar{display:none}
+    .dtab{padding:10px 16px;font-size:13px;font-weight:700;color:var(--gray);border-bottom:3px solid transparent;margin-bottom:-2px;cursor:pointer;white-space:nowrap;transition:all .2s}
+    .dtab.active{color:var(--red);border-bottom-color:var(--red)}
+    .dpanel{display:none}
+    .dpanel.active{display:block}
+    .order-card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:15px 16px;margin-bottom:10px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap}
+    .order-card:hover{box-shadow:0 3px 14px rgba(0,0,0,.06)}
+    .o-id{font-size:13px;font-weight:800;color:var(--dark);margin-bottom:3px}
+    .o-meta{font-size:11px;color:#aaa;margin-bottom:6px}
+    .o-chips{display:flex;gap:5px;flex-wrap:wrap}
+    .o-chip{background:var(--light);padding:2px 7px;border-radius:4px;font-size:10px;font-weight:600;color:var(--gray)}
+    .sbadge{padding:4px 10px;border-radius:20px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap}
+    .s-confirmed{background:#e8f5e9;color:#2e7d32}
+    .s-shipped{background:#e3f2fd;color:#1565c0}
+    .s-delivered{background:#f3e5f5;color:#6a1b9a}
+    .s-cancelled{background:#ffebee;color:#b71c1c}
+    .empty-st{text-align:center;padding:44px 20px}
+    .empty-st i{font-size:44px;color:#ddd;display:block;margin-bottom:12px}
+    .empty-st p{font-size:14px;color:#aaa}
+    .empty-st a{color:var(--red);font-weight:700}
+    .wl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px}
+    .wl-card{border:1px solid var(--border);border-radius:10px;overflow:hidden;cursor:pointer;transition:transform .2s,box-shadow .2s}
+    .wl-card:hover{transform:translateY(-3px);box-shadow:0 6px 18px rgba(0,0,0,.08)}
+    .wl-card img{width:100%;aspect-ratio:1;object-fit:cover;background:var(--light)}
+    .wl-body{padding:9px}
+    .wl-body h4{font-size:11px;font-weight:700;margin-bottom:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .wl-body p{font-size:12px;font-weight:800;color:var(--red)}
+    .wl-rm{width:100%;padding:5px;background:none;border:none;border-top:1px solid var(--border);font-size:11px;color:#aaa;cursor:pointer;font-family:'Poppins',sans-serif;transition:color .2s}
+    .wl-rm:hover{color:var(--red)}
+    .pform{max-width:460px}
+    .fsec{font-size:13px;font-weight:700;margin:18px 0 10px;padding-bottom:7px;border-bottom:1px solid var(--border)}
+    .frow{display:flex;gap:10px}
+    .frow .field{flex:1}
+    .save-btn{background:var(--red);color:#fff;border:none;padding:11px 26px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Poppins',sans-serif;transition:background .2s}
+    .save-btn:hover{background:var(--red-dark)}
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<div class="container">
+  <div class="navbar">
+    <div class="logo"><a href="index.html"><img src="images/logo.png" width="130px" alt="RedStore" onerror="this.style.display='none'"></a></div>
+    <div class="navbar-search-wrap">
+      <input type="text" id="navbar-search" placeholder="Search products…">
+    </div>
+    <nav>
+      <ul id="MenuItems">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="products.html">Products</a></li>
+        <li><a href="news.html">News</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="account.html" class="active">Account</a></li>
+      </ul>
+    </nav>
+    <a href="cart.html" class="cart-icon-wrap">
+      <img src="images/cart.png" width="28px" height="28px" alt="Cart" onerror="this.style.display='none'">
+      <span id="cart-badge">0</span>
+    </a>
+    <img src="images/menu.png" class="menu-icon" onclick="toggleMenu()" alt="Menu" onerror="this.style.display='none'">
+  </div>
+</div>
+
+<!-- AUTH VIEW -->
+<div id="auth-view">
+  <div class="auth-wrap">
+    <div class="auth-card">
+      <div class="auth-logo">
+        <span>RedStore</span>
+        <p>Your account, your orders, your wishlist</p>
+      </div>
+      <div class="auth-tabs">
+        <div class="auth-tab active" id="atab-login"    onclick="showAuthTab('login')">Login</div>
+        <div class="auth-tab"        id="atab-register" onclick="showAuthTab('register')">Register</div>
+      </div>
+
+      <!-- LOGIN PANEL -->
+      <div id="login-panel">
+        <div class="rs-alert info"><i class="fa fa-circle-info" style="margin-right:6px;"></i>Demo: <strong><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="d1a5b4a2a591b5b4bcbeffb2bebc">[email&#160;protected]</a></strong> / <strong>demo123</strong></div>
+        <div class="rs-alert err" id="login-err"></div>
+        <div class="rs-alert ok"  id="login-ok"></div>
+        <div class="field">
+          <label>Email Address</label>
+          <input type="email" id="login-email" placeholder="you@email.com" autocomplete="email">
+        </div>
+        <div class="field">
+          <label>Password</label>
+          <div class="pw-wrap">
+            <input type="password" id="login-pass" placeholder="Your password" autocomplete="current-password">
+            <i class="fa fa-eye" onclick="togglePass('login-pass',this)"></i>
+          </div>
+        </div>
+        <span class="forgot-lnk" onclick="forgotPw()">Forgot password?</span>
+        <button class="btn" style="width:100%" id="login-btn" onclick="handleLogin()">
+          <i class="fa fa-right-to-bracket" style="margin-right:8px;"></i>Login
+        </button>
+        <p class="auth-foot">No account? <a onclick="showAuthTab('register')">Register free</a></p>
+      </div>
+
+      <!-- REGISTER PANEL -->
+      <div id="register-panel" style="display:none">
+        <div class="rs-alert err" id="reg-err"></div>
+        <div class="rs-alert ok"  id="reg-ok"></div>
+        <div class="field">
+          <label>Username</label>
+          <input type="text" id="reg-user" placeholder="Pick a username" autocomplete="username">
+        </div>
+        <div class="field">
+          <label>Email Address</label>
+          <input type="email" id="reg-email" placeholder="you@email.com" autocomplete="email">
+        </div>
+        <div class="field">
+          <label>Password</label>
+          <div class="pw-wrap">
+            <input type="password" id="reg-pass" placeholder="Min 6 characters" autocomplete="new-password">
+            <i class="fa fa-eye" onclick="togglePass('reg-pass',this)"></i>
+          </div>
+        </div>
+        <div class="field">
+          <label>Confirm Password</label>
+          <input type="password" id="reg-pass2" placeholder="Repeat password" autocomplete="new-password">
+        </div>
+        <button class="btn" style="width:100%" id="reg-btn" onclick="handleRegister()">
+          <i class="fa fa-user-plus" style="margin-right:8px;"></i>Create Account
+        </button>
+        <p class="auth-foot">Have an account? <a onclick="showAuthTab('login')">Login</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DASHBOARD VIEW -->
+<div id="dashboard-view" style="display:none">
+  <div class="small-container dash-page">
+
+    <div class="profile-bar">
+      <div class="big-av" id="dash-av">U</div>
+      <div>
+        <h2 id="dash-name">User</h2>
+        <p id="dash-email"></p>
+        <p class="verified"><i class="fa fa-circle-check" style="margin-right:4px;"></i>Verified Account</p>
+      </div>
+      <button class="logout-btn" onclick="handleLogout()">
+        <i class="fa fa-right-from-bracket" style="margin-right:6px;"></i>Logout
+      </button>
+    </div>
+
+    <div class="dash-stats">
+      <div class="ds"><div class="n" id="st-orders">0</div><div class="l">Orders</div></div>
+      <div class="ds"><div class="n" id="st-wl">0</div><div class="l">Wishlist</div></div>
+      <div class="ds"><div class="n" id="st-spent">$0</div><div class="l">Total Spent</div></div>
+      <div class="ds"><div class="n" id="st-since">—</div><div class="l">Member Since</div></div>
+    </div>
+
+    <div class="dash-tabs">
+      <div class="dtab active" onclick="switchTab(this,'orders')">📦 My Orders</div>
+      <div class="dtab"        onclick="switchTab(this,'wishlist')">❤️ Wishlist</div>
+      <div class="dtab"        onclick="switchTab(this,'profile')">👤 Profile</div>
+    </div>
+
+    <div class="dpanel active" id="dp-orders">
+      <div id="orders-wrap"></div>
+    </div>
+    <div class="dpanel" id="dp-wishlist">
+      <div id="wishlist-wrap"></div>
+    </div>
+    <div class="dpanel" id="dp-profile">
+      <div class="pform">
+        <div class="rs-alert ok"  id="pf-ok"></div>
+        <div class="rs-alert err" id="pf-err"></div>
+        <div class="fsec">Account Information</div>
+        <div class="field"><label>Username</label><input type="text" id="pf-user" placeholder="Your name"></div>
+        <div class="field"><label>Email (read-only)</label><input type="email" id="pf-email" disabled></div>
+        <div class="fsec">Change Password <span style="font-size:11px;color:#aaa;font-weight:400;">(leave blank to keep current)</span></div>
+        <div class="field">
+          <label>Current Password</label>
+          <div class="pw-wrap"><input type="password" id="pf-cur" placeholder="Enter current password"><i class="fa fa-eye" onclick="togglePass('pf-cur',this)"></i></div>
+        </div>
+        <div class="field">
+          <label>New Password</label>
+          <div class="pw-wrap"><input type="password" id="pf-new" placeholder="Min 6 characters"><i class="fa fa-eye" onclick="togglePass('pf-new',this)"></i></div>
+        </div>
+        <div class="fsec">Saved Delivery Address</div>
+        <div class="field"><label>Street Address</label><input type="text" id="pf-street" placeholder="123 Main Street"></div>
+        <div class="frow">
+          <div class="field"><label>City</label><input type="text" id="pf-city" placeholder="Kolkata"></div>
+          <div class="field"><label>PIN Code</label><input type="text" id="pf-pin" placeholder="700001"></div>
+        </div>
+        <button class="save-btn" onclick="saveProfile()"><i class="fa fa-floppy-disk" style="margin-right:8px;"></i>Save Changes</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="container">
+    <div class="row">
+      <div class="footer-col-1">
+        <h3>Download Our App</h3>
+        <p>Download App for Android and iOS.</p>
+        <div class="app-logo">
+          <img src="images/play-store.png" alt="Play Store" onerror="this.style.display='none'">
+          <img src="images/app-store.png"  alt="App Store"  onerror="this.style.display='none'">
+        </div>
+      </div>
+      <div class="footer-col-2">
+        <img src="images/logo-white.png" alt="RedStore" onerror="this.style.display='none'">
+        <p>Our Purpose Is To Sustainably Make the Pleasure and Benefits of Sports Accessible to the Many.</p>
+      </div>
+      <div class="footer-col-3"><h3>Useful Links</h3><ul><li>Coupons</li><li>Blog Post</li><li>Return Policy</li></ul></div>
+      <div class="footer-col-4"><h3>Follow Us</h3><ul><li>Facebook</li><li>Twitter</li><li>Instagram</li></ul></div>
+    </div>
+    <hr>
+    <p class="copyright">© 2026 RedStore. All Rights Reserved.</p>
+  </div>
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="app.js"></script>
+<script>
+/* ──────────────────────────────────────────────────────────
+   RedStore Account Page — fully self-contained
+   Works with OR without backend server running
+   Local storage used as fallback "database"
+────────────────────────────────────────────────────────── */
+
+// Safety net: if app.js failed to load, define minimal store/cart inline
+if (typeof store === 'undefined') {
+  var store = {
+    getToken:    () => localStorage.getItem('rs_token'),
+    getUser:     () => { try { return JSON.parse(localStorage.getItem('rs_user')); } catch { return null; } },
+    setSession:  (tok, user) => { localStorage.setItem('rs_token', tok); localStorage.setItem('rs_user', JSON.stringify(user)); },
+    clearSession:() => { localStorage.removeItem('rs_token'); localStorage.removeItem('rs_user'); },
+    isLoggedIn:  () => !!localStorage.getItem('rs_token'),
+  };
+}
+if (typeof cart === 'undefined' || typeof cart.remove === 'undefined') {
+  var cart = {
+    get: function() {
+      try { return JSON.parse(localStorage.getItem('rs_cart')) || []; } catch(e) { return []; }
+    },
+    save: function(items) {
+      localStorage.setItem('rs_cart', JSON.stringify(items));
+      this.updateBadge();
+    },
+    add: function(product, qty, size, color) {
+      qty = qty || 1; size = size || ''; color = color || '';
+      var items = this.get();
+      var key   = product.id + '-' + size + '-' + color;
+      var ex    = items.find(function(i) { return i.key === key; });
+      if (ex) { ex.quantity += qty; }
+      else { items.push({ key: key, productId: product.id, name: product.name, price: product.price, image: product.image || '', quantity: qty, size: size, color: color }); }
+      this.save(items);
+      this.showToast('"' + product.name + '" added to cart!');
+    },
+    remove: function(key) {
+      this.save(this.get().filter(function(i) { return i.key !== key; }));
+    },
+    update: function(key, qty) {
+      var items = this.get();
+      var item  = items.find(function(i) { return i.key === key; });
+      if (item) {
+        if (qty <= 0) { this.remove(key); return; }
+        item.quantity = qty;
+        this.save(items);
+      }
+    },
+    clear: function() { this.save([]); },
+    count: function() {
+      return this.get().reduce(function(s, i) { return s + i.quantity; }, 0);
+    },
+    subtotal: function() {
+      return this.get().reduce(function(s, i) { return s + i.price * i.quantity; }, 0);
+    },
+    updateBadge: function() {
+      var b = document.getElementById('cart-badge');
+      if (b) { var c = this.count(); b.textContent = c; b.style.display = c > 0 ? 'flex' : 'none'; }
+    },
+    showToast: function(msg) {
+      var t = document.getElementById('rs-toast');
+      if (!t) {
+        t = document.createElement('div');
+        t.id = 'rs-toast';
+        t.style.cssText = 'position:fixed;bottom:24px;right:24px;background:#ff523b;color:#fff;padding:11px 18px;border-radius:8px;font-size:13px;font-weight:600;z-index:9999;transform:translateY(60px);transition:transform .3s;font-family:Poppins,sans-serif;max-width:260px;box-shadow:0 4px 16px rgba(255,82,59,.4);';
+        document.body.appendChild(t);
+      }
+      t.textContent = msg;
+      t.style.transform = 'translateY(0)';
+      clearTimeout(t._t);
+      t._t = setTimeout(function() { t.style.transform = 'translateY(60px)'; }, 2800);
+    }
+  };
+}
+
+function toggleMenu() { document.getElementById('MenuItems').classList.toggle('open'); }
+function fmt(n) { return '$' + Number(n).toFixed(2); }
+function starsHTML(r) {
+  let h='';
+  for(let i=1;i<=5;i++) h += i<=r ? '<i class="fa fa-star" style="color:var(--red);font-size:10px;"></i>' : '<i class="fa-regular fa-star" style="color:var(--red);font-size:10px;"></i>';
+  return h;
+}
+
+// ── Local storage keys ───────────────────────────────────
+const K = { users:'rs_users', orders:'rs_orders', wishlist:'rs_wishlist' };
+const db = {
+  users()    { try { return JSON.parse(localStorage.getItem(K.users))    || []; } catch { return []; } },
+  orders()   { try { return JSON.parse(localStorage.getItem(K.orders))   || []; } catch { return []; } },
+  wishlist() { try { return JSON.parse(localStorage.getItem(K.wishlist)) || []; } catch { return []; } },
+  save(key, data) { localStorage.setItem(key, JSON.stringify(data)); },
+};
+
+// ── Seed demo user once ──────────────────────────────────
+(function() {
+  const users = db.users();
+  if (!users.find(u => u.email === 'test@demo.com')) {
+    users.push({ id:1, username:'testuser', email:'test@demo.com', password:'demo123', createdAt: new Date(Date.now()-30*86400000).toISOString(), address:{} });
+    db.save(K.users, users);
+  }
+})();
+
+// ── Products list for wishlist display ────────────────────
+const PRODS = [
+  {id:1,name:'Red Printed T-Shirt',price:50,rating:4.0,image:'images/product-1.jpg'},
+  {id:2,name:'HRX Black Shoes',price:100,rating:4.5,image:'images/product-2.jpg'},
+  {id:3,name:'Track Pant (Grey)',price:150,rating:3.5,image:'images/product-3.jpg'},
+  {id:4,name:'Blue Polo T-Shirt',price:75,rating:3.0,image:'images/product-4.jpg'},
+  {id:5,name:'High Top Shoes',price:150,rating:4.0,image:'images/product-5.jpg'},
+  {id:6,name:'Puma Roundneck Tee',price:100,rating:4.5,image:'images/product-6.jpg'},
+  {id:7,name:'Sports Socks 3-Pack',price:50,rating:3.5,image:'images/product-7.jpg'},
+  {id:8,name:'Black Fossil Watch',price:250,rating:3.0,image:'images/product-8.jpg'},
+  {id:9,name:'Roadstar Watch',price:100,rating:4.0,image:'images/product-9.jpg'},
+  {id:10,name:'Sports Shoes Black',price:120,rating:4.5,image:'images/product-10.jpg'},
+  {id:11,name:'Walking Shoes White',price:151,rating:3.5,image:'images/product-11.jpg'},
+  {id:12,name:'Nike Track Pant',price:79,rating:3.0,image:'images/product-12.jpg'},
+];
+
+// ── Alert helpers ─────────────────────────────────────────
+function showAlert(id, msg, type='err') {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.className = 'rs-alert show ' + type;
+  el.innerHTML = msg;
+}
+function clearAlert(id) {
+  const el = document.getElementById(id);
+  if (el) el.classList.remove('show');
+}
+function togglePass(fid, icon) {
+  const inp = document.getElementById(fid);
+  if (!inp) return;
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+  icon.className = inp.type === 'text' ? 'fa fa-eye-slash' : 'fa fa-eye';
+}
+
+// ── Auth tab toggle ────────────────────────────────────────
+function showAuthTab(tab) {
+  document.getElementById('login-panel').style.display    = tab==='login'    ? 'block' : 'none';
+  document.getElementById('register-panel').style.display = tab==='register' ? 'block' : 'none';
+  document.getElementById('atab-login').classList.toggle('active',    tab==='login');
+  document.getElementById('atab-register').classList.toggle('active', tab==='register');
+}
+
+// ── LOGIN ─────────────────────────────────────────────────
+async function handleLogin() {
+  const email = document.getElementById('login-email').value.trim();
+  const pass  = document.getElementById('login-pass').value;
+  clearAlert('login-err'); clearAlert('login-ok');
+
+  if (!email)              { showAlert('login-err','Please enter your email address.'); return; }
+  if (!email.includes('@')){ showAlert('login-err','Please enter a valid email.'); return; }
+  if (!pass)               { showAlert('login-err','Please enter your password.'); return; }
+
+  const btn = document.getElementById('login-btn');
+  btn.innerHTML = '<i class="fa fa-spinner fa-spin" style="margin-right:8px;"></i>Logging in…';
+  btn.disabled  = true;
+
+  const reset = () => { btn.innerHTML = '<i class="fa fa-right-to-bracket" style="margin-right:8px;"></i>Login'; btn.disabled = false; };
+
+  // Try live API first
+  try {
+    const res  = await fetch('/api/users/login', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ email, password: pass }),
+      signal: AbortSignal.timeout(3000)
+    });
+    const data = await res.json();
+    if (res.ok && data.token) {
+      store.setSession(data.token, data.user);
+      reset();
+      showAlert('login-ok', 'Welcome back, ' + data.user.username + '!', 'ok');
+      setTimeout(showDashboard, 700);
+      return;
+    }
+    if (!res.ok) { reset(); showAlert('login-err', data.message || 'Invalid email or password.'); return; }
+  } catch (_) { /* server offline */ }
+
+  // Offline auth
+  const users = db.users();
+  const user  = users.find(u => u.email === email);
+  if (!user)              { reset(); showAlert('login-err','No account found with that email. Please register.'); return; }
+  if (user.password!==pass){ reset(); showAlert('login-err','Incorrect password. Please try again.'); return; }
+
+  const tok = btoa(unescape(encodeURIComponent(JSON.stringify({ id:user.id, email:user.email, username:user.username }))));
+  store.setSession(tok, { id:user.id, username:user.username, email:user.email });
+  reset();
+  showAlert('login-ok', 'Welcome back, ' + user.username + '!', 'ok');
+  setTimeout(showDashboard, 700);
+}
+
+// ── REGISTER ──────────────────────────────────────────────
+async function handleRegister() {
+  const username = document.getElementById('reg-user').value.trim();
+  const email    = document.getElementById('reg-email').value.trim();
+  const pass     = document.getElementById('reg-pass').value;
+  const pass2    = document.getElementById('reg-pass2').value;
+  clearAlert('reg-err'); clearAlert('reg-ok');
+
+  if (!username)               { showAlert('reg-err','Please enter a username.'); return; }
+  if (!email||!email.includes('@')){ showAlert('reg-err','Please enter a valid email.'); return; }
+  if (!pass)                   { showAlert('reg-err','Please enter a password.'); return; }
+  if (pass.length < 6)         { showAlert('reg-err','Password must be at least 6 characters.'); return; }
+  if (pass !== pass2)          { showAlert('reg-err','Passwords do not match.'); return; }
+
+  const btn = document.getElementById('reg-btn');
+  btn.innerHTML = '<i class="fa fa-spinner fa-spin" style="margin-right:8px;"></i>Creating…';
+  btn.disabled  = true;
+  const reset = () => { btn.innerHTML='<i class="fa fa-user-plus" style="margin-right:8px;"></i>Create Account'; btn.disabled=false; };
+
+  // Try live API
+  try {
+    const res  = await fetch('/api/users/register', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ username, email, password: pass }),
+      signal: AbortSignal.timeout(3000)
+    });
+    const data = await res.json();
+    if (res.ok && data.token) {
+      store.setSession(data.token, data.user);
+      reset(); showAlert('reg-ok','Account created! Welcome, '+data.user.username+'!','ok');
+      setTimeout(showDashboard, 700); return;
+    }
+    if (!res.ok) { reset(); showAlert('reg-err', data.message || 'Registration failed.'); return; }
+  } catch (_) { /* offline */ }
+
+  // Offline registration
+  const users = db.users();
+  if (users.find(u => u.email === email)) { reset(); showAlert('reg-err','An account with this email already exists.'); return; }
+  const newUser = { id:Date.now(), username, email, password:pass, createdAt:new Date().toISOString(), address:{} };
+  users.push(newUser);
+  db.save(K.users, users);
+  const tok = btoa(unescape(encodeURIComponent(JSON.stringify({ id:newUser.id, email, username }))));
+  store.setSession(tok, { id:newUser.id, username, email });
+  reset(); showAlert('reg-ok','Account created! Welcome, '+username+'!','ok');
+  setTimeout(showDashboard, 700);
+}
+
+// ── FORGOT PASSWORD ───────────────────────────────────────
+function forgotPw() {
+  const email = document.getElementById('login-email').value.trim();
+  clearAlert('login-err'); clearAlert('login-ok');
+  if (!email || !email.includes('@')) { showAlert('login-err','Enter your email above, then click Forgot password.'); return; }
+  showAlert('login-ok', 'Password reset link sent to ' + email + '.', 'ok');
+}
+
+// ── LOGOUT ────────────────────────────────────────────────
+function handleLogout() {
+  store.clearSession();
+  document.getElementById('dashboard-view').style.display = 'none';
+  document.getElementById('auth-view').style.display = 'block';
+  document.getElementById('login-email').value = '';
+  document.getElementById('login-pass').value  = '';
+  if (typeof cart !== 'undefined') cart.showToast('Logged out successfully!');
+}
+
+// ── DASHBOARD ─────────────────────────────────────────────
+function showDashboard() {
+  document.getElementById('auth-view').style.display      = 'none';
+  document.getElementById('dashboard-view').style.display = 'block';
+  const user = store.getUser();
+  if (!user) { handleLogout(); return; }
+  document.getElementById('dash-av').textContent    = (user.username || 'U').charAt(0).toUpperCase();
+  document.getElementById('dash-name').textContent  = user.username || 'User';
+  document.getElementById('dash-email').textContent = user.email    || '';
+  document.getElementById('pf-user').value  = user.username || '';
+  document.getElementById('pf-email').value = user.email    || '';
+  const lu = db.users().find(u => u.email === user.email);
+  if (lu?.address) {
+    document.getElementById('pf-street').value = lu.address.street || '';
+    document.getElementById('pf-city').value   = lu.address.city   || '';
+    document.getElementById('pf-pin').value    = lu.address.pin    || '';
+  }
+  renderOrders();
+  renderWishlist();
+  updateStats();
+}
+
+function switchTab(el, panel) {
+  document.querySelectorAll('.dtab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.dpanel').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('dp-' + panel).classList.add('active');
+}
+
+// ── ORDERS ────────────────────────────────────────────────
+async function renderOrders() {
+  const wrap = document.getElementById('orders-wrap');
+  let orders = [];
+
+  try {
+    const tok = store.getToken();
+    if (tok) {
+      const res = await fetch('/api/orders', { headers:{'Authorization':'Bearer '+tok}, signal:AbortSignal.timeout(3000) });
+      if (res.ok) orders = await res.json();
+    }
+  } catch (_) {}
+
+  if (!orders.length) {
+    const user  = store.getUser();
+    const email = user ? user.email : '';
+    const dbOrds = db.orders().filter(o => o.userEmail === email);
+    let localOrds = [];
+    try { localOrds = JSON.parse(localStorage.getItem('rs_local_orders') || '[]').filter(o => o.userEmail === email); } catch(_) {}
+    const seen = new Set();
+    orders = [...dbOrds, ...localOrds].filter(o => {
+      const id = o.id || o.orderId;
+      if (seen.has(id)) return false;
+      seen.add(id); return true;
+    }).reverse();
+  }
+
+  document.getElementById('st-orders').textContent = orders.length;
+
+  if (!orders.length) {
+    wrap.innerHTML = `<div class="empty-st"><i class="fa fa-box-open"></i><p>No orders yet.<br><a href="products.html">Start shopping →</a></p></div>`;
+    return;
+  }
+
+  wrap.innerHTML = orders.map(o => {
+    const status = o.status || 'confirmed';
+    const items  = o.items || [];
+    return `<div class="order-card">
+      <div style="flex:1;min-width:180px;">
+        <div class="o-id">${o.id || o.orderId || 'ORD-???'}</div>
+        <div class="o-meta">${o.createdAt ? new Date(o.createdAt).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}) : 'Recent'} · ${items.length} item${items.length!==1?'s':''} · <strong>${fmt(o.total||0)}</strong></div>
+        <div class="o-chips">
+          ${items.slice(0,3).map(i=>`<span class="o-chip">${i.name||'Item'}</span>`).join('')}
+          ${items.length>3?`<span class="o-chip">+${items.length-3} more</span>`:''}
+        </div>
+      </div>
+      <div style="text-align:right;flex-shrink:0;">
+        <span class="sbadge s-${status}">${status.charAt(0).toUpperCase()+status.slice(1)}</span>
+        ${o.estimatedDelivery?`<div style="font-size:10px;color:#aaa;margin-top:5px;">Est. ${new Date(o.estimatedDelivery).toDateString()}</div>`:''}
+        ${status!=='delivered'&&status!=='cancelled'?`<button onclick="cancelOrder('${o.id||o.orderId}')" style="font-size:10px;color:#aaa;background:none;border:none;cursor:pointer;font-family:Poppins,sans-serif;margin-top:6px;display:block;margin-left:auto;">Cancel Order</button>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function cancelOrder(oid) {
+  const orders = db.orders();
+  const i = orders.findIndex(o => (o.id||o.orderId) === oid);
+  if (i !== -1) { orders[i].status = 'cancelled'; db.save(K.orders, orders); renderOrders(); if (typeof cart!=='undefined') cart.showToast('Order cancelled.'); }
+}
+
+// ── WISHLIST ──────────────────────────────────────────────
+async function renderWishlist() {
+  const wrap = document.getElementById('wishlist-wrap');
+  let items  = [];
+
+  try {
+    const tok = store.getToken();
+    if (tok) {
+      const res = await fetch('/api/users/wishlist', { headers:{'Authorization':'Bearer '+tok}, signal:AbortSignal.timeout(3000) });
+      if (res.ok) { const d = await res.json(); if (d.length) { items = d; } }
+    }
+  } catch (_) {}
+
+  if (!items.length) {
+    const user  = store.getUser();
+    const email = user ? user.email : '';
+    const ids1  = db.wishlist().filter(w => w.userEmail === email).map(w => w.productId);
+    let   ids2  = [];
+    try { ids2 = JSON.parse(localStorage.getItem('rs_local_wishlist') || '[]').filter(w => w.userEmail === email).map(w => w.productId); } catch(_) {}
+    const allIds = [...new Set([...ids1, ...ids2])];
+    items = PRODS.filter(p => allIds.includes(p.id));
+  }
+
+  document.getElementById('st-wl').textContent = items.length;
+
+  if (!items.length) {
+    wrap.innerHTML = `<div class="empty-st"><i class="fa fa-heart-crack"></i><p>Wishlist is empty.<br><a href="products.html">Find something you love →</a></p></div>`;
+    return;
+  }
+
+  wrap.innerHTML = `<div class="wl-grid">` + items.map(p => `
+    <div class="wl-card">
+      <img src="${p.image||'images/product-1.jpg'}" alt="${p.name}" onclick="location.href='products-details.html?id=${p.id}'" onerror="this.onerror=null;this.src='images/product-1.jpg'">
+      <div class="wl-body" onclick="location.href='products-details.html?id=${p.id}'">
+        <h4>${p.name}</h4>
+        <div style="margin:3px 0">${starsHTML(p.rating)}</div>
+        <p>${fmt(p.price)}</p>
+      </div>
+      <button class="wl-rm" onclick="removeWish(${p.id})"><i class="fa fa-trash-can" style="margin-right:4px;"></i>Remove</button>
+    </div>`).join('') + `</div>`;
+}
+
+function removeWish(pid) {
+  const user  = store.getUser();
+  const email = user ? user.email : '';
+  const wl = db.wishlist().filter(w => !(w.userEmail === email && w.productId === pid));
+  db.save(K.wishlist, wl);
+  try {
+    const local = JSON.parse(localStorage.getItem('rs_local_wishlist') || '[]').filter(w => !(w.userEmail === email && w.productId === pid));
+    localStorage.setItem('rs_local_wishlist', JSON.stringify(local));
+  } catch(_) {}
+  renderWishlist();
+  if (typeof cart !== 'undefined') cart.showToast('Removed from wishlist.');
+}
+
+// ── STATS ─────────────────────────────────────────────────
+function updateStats() {
+  const user    = store.getUser();
+  const orders  = db.orders().filter(o => o.userEmail === user?.email);
+  const spent   = orders.reduce((s,o) => s + (o.total||0), 0);
+  const _email  = user ? user.email : '';
+  let _wlLocal = []; try { _wlLocal = JSON.parse(localStorage.getItem('rs_local_wishlist') || '[]'); } catch(_) {}
+  const _allWL = [...db.wishlist().filter(w => w.userEmail === _email), ..._wlLocal.filter(w => w.userEmail === _email)];
+  const wlCount = new Set(_allWL.map(w => w.productId)).size;
+  const lu      = db.users().find(u => u.email === user?.email);
+
+  document.getElementById('st-orders').textContent = orders.length;
+  document.getElementById('st-wl').textContent     = wlCount;
+  document.getElementById('st-spent').textContent  = spent > 0 ? fmt(spent) : '$0';
+  if (lu?.createdAt) {
+    const d = new Date(lu.createdAt);
+    document.getElementById('st-since').textContent = d.toLocaleDateString('en-IN',{month:'short',year:'numeric'});
+  }
+}
+
+// ── SAVE PROFILE ──────────────────────────────────────────
+async function saveProfile() {
+  const username = document.getElementById('pf-user').value.trim();
+  const curPass  = document.getElementById('pf-cur').value;
+  const newPass  = document.getElementById('pf-new').value;
+  const street   = document.getElementById('pf-street').value.trim();
+  const city     = document.getElementById('pf-city').value.trim();
+  const pin      = document.getElementById('pf-pin').value.trim();
+  clearAlert('pf-ok'); clearAlert('pf-err');
+
+  if (!username)              { showAlert('pf-err','Username cannot be empty.'); return; }
+  if (newPass && !curPass)    { showAlert('pf-err','Enter your current password to set a new one.'); return; }
+  if (newPass && newPass.length<6) { showAlert('pf-err','New password must be at least 6 characters.'); return; }
+
+  let saved = false;
+
+  // Try API
+  try {
+    const body = { username };
+    if (curPass && newPass) { body.currentPassword = curPass; body.newPassword = newPass; }
+    const res  = await fetch('/api/users/profile', {
+      method:'PUT', headers:{'Content-Type':'application/json','Authorization':'Bearer '+store.getToken()},
+      body: JSON.stringify(body), signal: AbortSignal.timeout(3000)
+    });
+    const data = await res.json();
+    if (res.ok) { store.setSession(store.getToken(), { ...store.getUser(), username:data.user.username }); saved = true; }
+    else { showAlert('pf-err', data.message || 'Save failed.'); return; }
+  } catch (_) { /* offline */ }
+
+  // Offline save
+  if (!saved) {
+    const users = db.users();
+    const user  = store.getUser();
+    const i     = users.findIndex(u => u.email === user?.email);
+    if (i !== -1) {
+      if (newPass && curPass) {
+        if (users[i].password !== curPass) { showAlert('pf-err','Current password is incorrect.'); return; }
+        users[i].password = newPass;
+      }
+      users[i].username = username;
+      users[i].address  = { street, city, pin };
+      db.save(K.users, users);
+    }
+    store.setSession(store.getToken(), { ...store.getUser(), username });
+    saved = true;
+  }
+
+  if (saved) {
+    document.getElementById('dash-av').textContent   = username.charAt(0).toUpperCase();
+    document.getElementById('dash-name').textContent = username;
+    document.getElementById('pf-cur').value = '';
+    document.getElementById('pf-new').value = '';
+    showAlert('pf-ok', 'Profile saved successfully!', 'ok');
+    if (typeof cart !== 'undefined') cart.showToast('Profile updated!');
+  }
+}
+
+// ── KEYBOARD SHORTCUTS ────────────────────────────────────
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Enter') return;
+  if (document.getElementById('auth-view').style.display === 'none') return;
+  if (document.getElementById('login-panel').style.display !== 'none') handleLogin();
+  else handleRegister();
+});
+
+// ── INIT ──────────
+if (typeof store !== 'undefined' && store.isLoggedIn()) {
+  showDashboard();
+}
+</script>
+</body>
+</html>

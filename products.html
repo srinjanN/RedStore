@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>All Products — RedStore</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<div class="container">
+  <div class="navbar">
+    <div class="logo"><a href="index.html"><img src="images/logo.png" width="130px" alt="RedStore"></a></div>
+    <div class="navbar-search-wrap">
+      <input type="text" id="navbar-search" placeholder="Search products…">
+    </div>
+    <nav>
+      <ul id="MenuItems">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="products.html" class="active">Products</a></li>
+        <li><a href="news.html">News</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="account.html" id="nav-account">Account</a></li>
+      </ul>
+    </nav>
+    <a href="cart.html" class="cart-icon-wrap">
+      <img src="images/cart.png" width="28px" height="28px" alt="Cart">
+      <span id="cart-badge">0</span>
+    </a>
+    <img src="images/menu.png" class="menu-icon" onclick="toggleMenu()" alt="Menu">
+  </div>
+</div>
+
+<!-- PAGE HEADER -->
+<div style="background:var(--light);padding:30px 0;margin-bottom:10px;">
+  <div class="small-container">
+    <p style="font-size:12px;color:#aaa;margin-bottom:4px;"><a href="index.html">Home</a> / All Products</p>
+    <h1 style="font-size:28px;font-weight:700;" id="page-title">All Products</h1>
+    <p id="result-count" style="font-size:13px;margin-top:4px;color:var(--gray);"></p>
+  </div>
+</div>
+
+<div class="small-container">
+
+  <!-- FILTERS -->
+  <div style="display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin:30px 0 20px;justify-content:space-between;">
+    <div class="filters-bar" id="category-filters">
+      <span class="filter-chip active" data-cat="">All</span>
+      <span class="filter-chip" data-cat="tshirts">👕 T-Shirts</span>
+      <span class="filter-chip" data-cat="shoes">👟 Shoes</span>
+      <span class="filter-chip" data-cat="pants">👖 Pants</span>
+      <span class="filter-chip" data-cat="watches">⌚ Watches</span>
+      <span class="filter-chip" data-cat="accessories">🧦 Accessories</span>
+    </div>
+    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+      <select id="sort-select" style="min-width:180px;">
+        <option value="">Default Sorting</option>
+        <option value="price_asc">Price: Low to High</option>
+        <option value="price_desc">Price: High to Low</option>
+        <option value="rating">Top Rated</option>
+        <option value="popularity">Most Popular</option>
+      </select>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <label style="font-size:12px;font-weight:600;color:var(--dark);">Price:</label>
+        <input type="number" id="min-price" placeholder="Min $" style="width:70px;padding:7px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;outline:none;font-family:Poppins,sans-serif;">
+        <input type="number" id="max-price" placeholder="Max $" style="width:70px;padding:7px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;outline:none;font-family:Poppins,sans-serif;">
+        <button onclick="applyFilters()" style="padding:7px 14px;background:var(--red);color:#fff;border:none;border-radius:6px;font-size:12px;cursor:pointer;font-family:Poppins,sans-serif;font-weight:600;">Go</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRODUCTS GRID -->
+  <div class="row" id="products-grid"></div>
+
+  <!-- PAGINATION -->
+  <div class="page-btn" id="pagination"></div>
+
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="container">
+    <div class="row">
+      <div class="footer-col-1">
+        <h3>Download Our App</h3>
+        <p>Download App for Android and iOS.</p>
+        <div class="app-logo">
+          <img src="images/play-store.png" alt="Play Store">
+          <img src="images/app-store.png" alt="App Store">
+        </div>
+      </div>
+      <div class="footer-col-2">
+        <img src="images/logo-white.png" alt="RedStore">
+        <p>Our Purpose Is To Sustainably Make the Pleasure and Benefits of Sports Accessible to the Many.</p>
+      </div>
+      <div class="footer-col-3">
+        <h3>Useful Links</h3>
+        <ul><li>Coupons</li><li>Blog Post</li><li>Return Policy</li><li>Join Affiliate</li></ul>
+      </div>
+      <div class="footer-col-4">
+        <h3>Follow Us</h3>
+        <ul><li>Facebook</li><li>Instagram</li><li>Twitter</li><li>YouTube</li></ul>
+      </div>
+    </div>
+    <hr>
+    <p class="copyright">© 2026 RedStore. All Rights Reserved.</p>
+  </div>
+</div>
+
+<script src="app.js"></script>
+<script>
+
+if (typeof store === "undefined") {
+  var store = {
+    getToken:    function() { return localStorage.getItem("rs_token"); },
+    getUser:     function() { try { return JSON.parse(localStorage.getItem("rs_user")); } catch(e) { return null; } },
+    setSession:  function(tok,user) { localStorage.setItem("rs_token",tok); localStorage.setItem("rs_user",JSON.stringify(user)); },
+    clearSession:function() { localStorage.removeItem("rs_token"); localStorage.removeItem("rs_user"); },
+    isLoggedIn:  function() { return !!localStorage.getItem("rs_token"); }
+  };
+}
+if (typeof cart === 'undefined' || typeof cart.remove === 'undefined') {
+  var cart = {
+    get: function() {
+      try { return JSON.parse(localStorage.getItem('rs_cart')) || []; } catch(e) { return []; }
+    },
+    save: function(items) {
+      localStorage.setItem('rs_cart', JSON.stringify(items));
+      this.updateBadge();
+    },
+    add: function(product, qty, size, color) {
+      qty = qty || 1; size = size || ''; color = color || '';
+      var items = this.get();
+      var key   = product.id + '-' + size + '-' + color;
+      var ex    = items.find(function(i) { return i.key === key; });
+      if (ex) { ex.quantity += qty; }
+      else { items.push({ key: key, productId: product.id, name: product.name, price: product.price, image: product.image || '', quantity: qty, size: size, color: color }); }
+      this.save(items);
+      this.showToast('"' + product.name + '" added to cart!');
+    },
+    remove: function(key) {
+      this.save(this.get().filter(function(i) { return i.key !== key; }));
+    },
+    update: function(key, qty) {
+      var items = this.get();
+      var item  = items.find(function(i) { return i.key === key; });
+      if (item) {
+        if (qty <= 0) { this.remove(key); return; }
+        item.quantity = qty;
+        this.save(items);
+      }
+    },
+    clear: function() { this.save([]); },
+    count: function() {
+      return this.get().reduce(function(s, i) { return s + i.quantity; }, 0);
+    },
+    subtotal: function() {
+      return this.get().reduce(function(s, i) { return s + i.price * i.quantity; }, 0);
+    },
+    updateBadge: function() {
+      var b = document.getElementById('cart-badge');
+      if (b) { var c = this.count(); b.textContent = c; b.style.display = c > 0 ? 'flex' : 'none'; }
+    },
+    showToast: function(msg) {
+      var t = document.getElementById('rs-toast');
+      if (!t) {
+        t = document.createElement('div');
+        t.id = 'rs-toast';
+        t.style.cssText = 'position:fixed;bottom:24px;right:24px;background:#ff523b;color:#fff;padding:11px 18px;border-radius:8px;font-size:13px;font-weight:600;z-index:9999;transform:translateY(60px);transition:transform .3s;font-family:Poppins,sans-serif;max-width:260px;box-shadow:0 4px 16px rgba(255,82,59,.4);';
+        document.body.appendChild(t);
+      }
+      t.textContent = msg;
+      t.style.transform = 'translateY(0)';
+      clearTimeout(t._t);
+      t._t = setTimeout(function() { t.style.transform = 'translateY(60px)'; }, 2800);
+    }
+  };
+}
+if (typeof fmt === "undefined") { var fmt = function(n) { return "$"+Number(n).toFixed(2); }; }
+if (typeof starsHTML === "undefined") { var starsHTML = function(r) { var h="";for(var i=1;i<=5;i++)h+=i<=r?'<i class="fa fa-star" style="color:#ff523b;font-size:12px;"></i>':'<i class="fa-regular fa-star" style="color:#ff523b;font-size:12px;"></i>';return h; }; }
+
+// ── Built-in product data (works without server) ──────────────────────────────
+const LOCAL_PRODUCTS = [
+  { id:1,  name:'Red Printed T-Shirt',       price:50,  category:'tshirts',     rating:4.0, reviews:128, image:'images/product-1.jpg',  badge:'bestseller', stock:45 },
+  { id:2,  name:'HRX Black Shoes',           price:100, category:'shoes',       rating:4.5, reviews:89,  image:'images/product-2.jpg',  badge:'trending',   stock:20 },
+  { id:3,  name:'Track Pant (Grey)',          price:150, category:'pants',       rating:3.5, reviews:64,  image:'images/product-3.jpg',  badge:'',           stock:35 },
+  { id:4,  name:'Blue Polo T-Shirt',         price:75,  category:'tshirts',     rating:3.0, reviews:42,  image:'images/product-4.jpg',  badge:'',           stock:60 },
+  { id:5,  name:'High Top Shoes (White)',     price:150, category:'shoes',       rating:4.0, reviews:73,  image:'images/product-5.jpg',  badge:'new',        stock:15 },
+  { id:6,  name:'Puma Roundneck T-Shirt',    price:100, category:'tshirts',     rating:4.5, reviews:156, image:'images/product-6.jpg',  badge:'bestseller', stock:50 },
+  { id:7,  name:'Sports Socks (Pack of 3)',  price:50,  category:'accessories', rating:3.5, reviews:210, image:'images/product-7.jpg',  badge:'',           stock:100 },
+  { id:8,  name:'Black Fossil Watch',        price:250, category:'watches',     rating:3.0, reviews:38,  image:'images/product-8.jpg',  badge:'premium',    stock:12 },
+  { id:9,  name:'Roadstar Watch (Black)',     price:100, category:'watches',     rating:4.0, reviews:55,  image:'images/product-9.jpg',  badge:'',           stock:18 },
+  { id:10, name:'Sports Shoes (Black)',      price:120, category:'shoes',       rating:4.5, reviews:99,  image:'images/product-10.jpg', badge:'trending',   stock:25 },
+  { id:11, name:'Walking Shoes (White)',     price:151, category:'shoes',       rating:3.5, reviews:47,  image:'images/product-11.jpg', badge:'',           stock:30 },
+  { id:12, name:'Nike Track Pant',          price:79,  category:'pants',       rating:3.0, reviews:61,  image:'images/product-12.jpg', badge:'',           stock:40 },
+];
+
+function toggleMenu() {
+  document.getElementById('MenuItems').classList.toggle('open');
+}
+
+let currentPage     = 1;
+let currentCategory = '';
+let currentSort     = '';
+let currentMin      = '';
+let currentMax      = '';
+
+// Read URL params on load
+const urlP = new URLSearchParams(window.location.search);
+if (urlP.get('category')) {
+  currentCategory = urlP.get('category');
+  document.querySelectorAll('.filter-chip').forEach(c => {
+    c.classList.toggle('active', c.dataset.cat === currentCategory);
+  });
+}
+if (urlP.get('q')) {
+  document.getElementById('navbar-search').value = urlP.get('q');
+}
+
+// Category filter chips
+document.querySelectorAll('.filter-chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    currentCategory = chip.dataset.cat;
+    currentPage = 1;
+    loadProducts();
+  });
+});
+
+document.getElementById('sort-select').addEventListener('change', e => {
+  currentSort = e.target.value;
+  currentPage = 1;
+  loadProducts();
+});
+
+document.getElementById('navbar-search').addEventListener('keydown', e => {
+  if (e.key === 'Enter') { currentPage = 1; loadProducts(); }
+});
+
+function applyFilters() {
+  currentMin = document.getElementById('min-price').value;
+  currentMax = document.getElementById('max-price').value;
+  currentPage = 1;
+  loadProducts();
+}
+
+function starsHTML(rating) {
+  let html = '';
+  for (let i = 1; i <= 5; i++) {
+    if (rating >= i)        html += '<i class="fa fa-star"></i>';
+    else if (rating >= i-0.5) html += '<i class="fa-solid fa-star-half-stroke"></i>';
+    else                    html += '<i class="fa-regular fa-star"></i>';
+  }
+  return html;
+}
+
+function fmt(n) { return '$' + Number(n).toFixed(2); }
+
+function productCard(p) {
+  const imgSrc = p.image || 'images/product-1.jpg';
+  return `
+    <div class="col-4" onclick="location.href='products-details.html?id=${p.id}'" style="cursor:pointer;">
+      ${p.badge ? `<span class="product-badge badge-${p.badge}">${p.badge}</span>` : ''}
+      <img src="${imgSrc}" alt="${p.name}" loading="lazy"
+           onerror="this.onerror=null;this.src='images/product-1.jpg'">
+      <h4>${p.name}</h4>
+      <div class="rating">${starsHTML(p.rating)}<span class="rating-count">(${p.reviews})</span></div>
+      <p>${fmt(p.price)}</p>
+      <button class="add-to-cart-btn"
+        onclick="event.stopPropagation();
+                 cart.add({id:${p.id},name:'${p.name.replace(/'/g,"\\'")}',price:${p.price},image:'${imgSrc}'});
+                 this.textContent='Added!';
+                 setTimeout(()=>this.textContent='Add to Cart',1500);">
+        Add to Cart
+      </button>
+    </div>`;
+}
+
+function filterAndSort(products) {
+  let result = [...products];
+  const searchVal = document.getElementById('navbar-search').value.trim().toLowerCase();
+
+  if (currentCategory)    result = result.filter(p => p.category === currentCategory);
+  if (searchVal)          result = result.filter(p => p.name.toLowerCase().includes(searchVal));
+  if (currentMin)         result = result.filter(p => p.price >= Number(currentMin));
+  if (currentMax)         result = result.filter(p => p.price <= Number(currentMax));
+
+  switch (currentSort) {
+    case 'price_asc':  result.sort((a, b) => a.price - b.price); break;
+    case 'price_desc': result.sort((a, b) => b.price - a.price); break;
+    case 'rating':     result.sort((a, b) => b.rating - a.rating); break;
+    case 'popularity': result.sort((a, b) => b.reviews - a.reviews); break;
+  }
+  return result;
+}
+
+function renderProducts(products) {
+  const LIMIT = 12;
+  const total    = products.length;
+  const pages    = Math.ceil(total / LIMIT) || 1;
+  const start    = (currentPage - 1) * LIMIT;
+  const pageData = products.slice(start, start + LIMIT);
+
+  const grid = document.getElementById('products-grid');
+
+  if (!pageData.length) {
+    grid.innerHTML = `
+      <div style="text-align:center;padding:60px;width:100%;">
+        <i class="fa fa-box-open" style="font-size:48px;color:#ddd;"></i>
+        <p style="margin-top:16px;font-size:16px;color:#aaa;">No products found. Try adjusting your filters.</p>
+      </div>`;
+    document.getElementById('pagination').innerHTML = '';
+    document.getElementById('result-count').textContent = '';
+    return;
+  }
+
+  grid.innerHTML = pageData.map(productCard).join('');
+
+  const catName = currentCategory
+    ? currentCategory.charAt(0).toUpperCase() + currentCategory.slice(1)
+    : 'All Products';
+  document.getElementById('page-title').textContent = catName;
+  document.getElementById('result-count').textContent =
+    `Showing ${pageData.length} of ${total} product${total !== 1 ? 's' : ''}`;
+
+  // Pagination
+  let pag = '';
+  for (let i = 1; i <= pages; i++) {
+    pag += `<span class="${i === currentPage ? 'active' : ''}" onclick="goPage(${i})">${i}</span>`;
+  }
+  if (currentPage < pages) pag += `<span onclick="goPage(${currentPage + 1})">&#8594;</span>`;
+  document.getElementById('pagination').innerHTML = pag;
+}
+
+function goPage(n) {
+  currentPage = n;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  loadProducts();
+}
+
+// Try API first, fall back to local data
+async function loadProducts() {
+  const grid = document.getElementById('products-grid');
+
+  // Show skeleton while loading
+  grid.innerHTML = [1,2,3,4,5,6,7,8].map(() =>
+    `<div class="col-4">
+       <div class="skeleton skel-img"></div>
+       <div class="skeleton skel-text" style="margin-top:12px;height:14px;border-radius:4px;"></div>
+       <div class="skeleton skel-text short" style="margin-top:8px;height:12px;border-radius:4px;width:60%;"></div>
+     </div>`
+  ).join('');
+
+  try {
+    const searchVal = document.getElementById('navbar-search').value.trim();
+    let url = `/api/products?page=${currentPage}&limit=12`;
+    if (currentCategory) url += `&category=${currentCategory}`;
+    if (currentSort)     url += `&sort=${currentSort}`;
+    if (currentMin)      url += `&minPrice=${currentMin}`;
+    if (currentMax)      url += `&maxPrice=${currentMax}`;
+    if (searchVal)       url += `&search=${encodeURIComponent(searchVal)}`;
+
+    const res = await fetch(url, { signal: AbortSignal.timeout(3000) });
+    if (!res.ok) throw new Error('API error');
+
+    const data = await res.json();
+    if (!data.products) throw new Error('No products in response');
+
+    // API success — render server data
+    const catName = currentCategory
+      ? currentCategory.charAt(0).toUpperCase() + currentCategory.slice(1)
+      : 'All Products';
+    document.getElementById('page-title').textContent = catName;
+    document.getElementById('result-count').textContent =
+      `Showing ${data.products.length} of ${data.total} products`;
+
+    if (!data.products.length) {
+      grid.innerHTML = `
+        <div style="text-align:center;padding:60px;width:100%;">
+          <i class="fa fa-box-open" style="font-size:48px;color:#ddd;"></i>
+          <p style="margin-top:16px;font-size:16px;color:#aaa;">No products found. Try adjusting your filters.</p>
+        </div>`;
+      document.getElementById('pagination').innerHTML = '';
+      return;
+    }
+
+    grid.innerHTML = data.products.map(productCard).join('');
+
+    let pag = '';
+    for (let i = 1; i <= data.pages; i++) {
+      pag += `<span class="${i === currentPage ? 'active' : ''}" onclick="goPage(${i})">${i}</span>`;
+    }
+    if (currentPage < data.pages) pag += `<span onclick="goPage(${currentPage + 1})">&#8594;</span>`;
+    document.getElementById('pagination').innerHTML = pag;
+
+  } catch (_) {
+    // API unavailable — use local data silently
+    const filtered = filterAndSort(LOCAL_PRODUCTS);
+    renderProducts(filtered);
+  }
+}
+
+// Update nav link if logged in
+if (typeof store !== 'undefined' && store.isLoggedIn()) {
+  const u = store.getUser();
+  const navEl = document.getElementById('nav-account');
+  if (navEl && u) navEl.textContent = u.username || 'Profile';
+}
+
+loadProducts();
+</script>
+</body>
+</html>

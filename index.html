@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RedStore — Premium Sports & Fashion</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<div class="header">
+<div class="container">
+  <div class="navbar">
+    <div class="logo">
+      <a href="index.html"><img src="images/logo.png" width="130px" alt="RedStore"></a>
+    </div>
+    <div class="navbar-search-wrap">
+      <input type="text" id="navbar-search" placeholder="Search products…">
+    </div>
+    <nav>
+      <ul id="MenuItems">
+        <li><a href="index.html" class="active">Home</a></li>
+        <li><a href="products.html">Products</a></li>
+        <li><a href="news.html">News</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="account.html" id="nav-account">Account</a></li>
+      </ul>
+    </nav>
+    <a href="cart.html" class="cart-icon-wrap">
+      <img src="images/cart.png" width="28px" height="28px" alt="Cart">
+      <span id="cart-badge">0</span>
+    </a>
+    <img src="images/menu.png" class="menu-icon" onclick="toggleMenu()" alt="Menu">
+  </div>
+
+  <!-- HERO -->
+  <div class="row" style="padding: 40px 0 60px; align-items: center;">
+    <div class="col-2">
+      <p style="color:var(--red);font-weight:600;text-transform:uppercase;letter-spacing:2px;font-size:13px;">New Collection 2026</p>
+      <h1>Give Your Workout<br>A New Style!</h1>
+      <p>Success isn't always about greatness. It's about consistency. Consistent hard work gains success. Greatness will come.</p>
+      <div style="display:flex;gap:14px;margin-top:30px;flex-wrap:wrap;">
+        <a href="products.html" class="btn">Explore Now &rarr;</a>
+        <a href="products.html?category=shoes" class="btn-outline">Shop Shoes</a>
+      </div>
+    </div>
+    <div class="col-2" style="text-align:center;">
+      <img src="images/image1.png" alt="Hero">
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- STATS BAR (loads from API) -->
+<div class="stats-bar">
+  <div class="container">
+    <div class="row" id="stats-row">
+      <div class="stat-item"><div class="num">12+</div><div class="label">Products</div></div>
+      <div class="stat-item"><div class="num">5+</div><div class="label">Categories</div></div>
+      <div class="stat-item"><div class="num">500+</div><div class="label">Happy Customers</div></div>
+      <div class="stat-item"><div class="num">4.5★</div><div class="label">Avg Rating</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- CATEGORIES -->
+<div class="categories">
+  <div class="small-container">
+    <div class="row" style="gap:20px;">
+      <div class="col-3" onclick="location.href='products.html?category=tshirts'">
+        <img src="images/category-1.jpg" alt="T-Shirts" style="height:220px;object-fit:cover;">
+        <div class="category-label">👕 T-Shirts</div>
+      </div>
+      <div class="col-3" onclick="location.href='products.html?category=shoes'">
+        <img src="images/category-2.jpg" alt="Shoes" style="height:220px;object-fit:cover;">
+        <div class="category-label">👟 Shoes</div>
+      </div>
+      <div class="col-3" onclick="location.href='products.html?category=watches'">
+        <img src="images/category-3.jpg" alt="Watches" style="height:220px;object-fit:cover;">
+        <div class="category-label">⌚ Watches</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURED PRODUCTS -->
+<div class="small-container">
+  <h2 class="title">Featured Products</h2>
+  <div class="row" id="featured-products"></div>
+
+  <h2 class="title" style="margin-top:60px;">Latest Products</h2>
+  <div class="row" id="latest-products"></div>
+</div>
+
+<!-- OFFER BANNER -->
+<div class="offer">
+  <div class="small-container">
+    <div class="row" style="align-items:center;">
+      <div class="col-2">
+        <img src="images/exclusive.png" class="offer-img" alt="Smart Band">
+      </div>
+      <div class="col-2" style="padding:20px 30px;">
+        <p>Exclusively Available on RedStore</p>
+        <h1>Smart Band 4</h1>
+        <small>The Mi Smart Band 4 features a 39.9% larger AMOLED color full-touch display with adjustable brightness, so everything is clear as can be. Track your fitness, sleep, and more.</small>
+        <br><br>
+        <a href="products-details.html?id=8" class="btn">Buy Now &rarr;</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TESTIMONIALS -->
+<div class="testimonial">
+  <div class="small-container">
+    <h2 class="title">What Our Customers Say</h2>
+    <div class="row" id="testimonials-row">
+      <div class="col-3">
+        <i class="fa fa-quote-left"></i>
+        <p>Absolutely love the quality! The T-shirts fit perfectly and the fabric is so comfortable. Will definitely shop again.</p>
+        <div class="rating"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa-regular fa-star"></i></div>
+        <img src="images/user-1.png" alt="Sean Parker">
+        <h3>Sean Parker</h3>
+      </div>
+      <div class="col-3">
+        <i class="fa fa-quote-left"></i>
+        <p>Delivery was super fast and the shoes are exactly as pictured. Great customer service too. Highly recommended!</p>
+        <div class="rating"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i></div>
+        <img src="images/user-2.png" alt="Mike Smith">
+        <h3>Mike Smith</h3>
+      </div>
+      <div class="col-3">
+        <i class="fa fa-quote-left"></i>
+        <p>Best online shopping experience I've had. The watch looks even more premium in person. Worth every penny!</p>
+        <div class="rating"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa-solid fa-star-half-stroke"></i></div>
+        <img src="images/user-3.png" alt="Mabel Joe">
+        <h3>Mabel Joe</h3>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BRANDS -->
+<div class="brands">
+  <div class="small-container">
+    <div class="row" style="justify-content:space-evenly;">
+      <div class="col-5"><img src="images/logo-godrej.png" alt="Godrej"></div>
+      <div class="col-5"><img src="images/logo-oppo.png" alt="Oppo"></div>
+      <div class="col-5"><img src="images/logo-coca-cola.png" alt="Coca-Cola"></div>
+      <div class="col-5"><img src="images/logo-paypal.png" alt="PayPal"></div>
+      <div class="col-5"><img src="images/logo-philips.png" alt="Philips"></div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="container">
+    <div class="row">
+      <div class="footer-col-1">
+        <h3>Download Our App</h3>
+        <p>Download App for Android and iOS mobile phone.</p>
+        <div class="app-logo">
+          <img src="images/play-store.png" alt="Play Store">
+          <img src="images/app-store.png" alt="App Store">
+        </div>
+      </div>
+      <div class="footer-col-2">
+        <img src="images/logo-white.png" alt="RedStore">
+        <p>Our Purpose Is To Sustainably Make the Pleasure and Benefits of Sports Accessible to the Many.</p>
+        <div class="footer-social">
+          <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="#"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#"><i class="fa-brands fa-twitter"></i></a>
+          <a href="#"><i class="fa-brands fa-youtube"></i></a>
+        </div>
+      </div>
+      <div class="footer-col-3">
+        <h3>Useful Links</h3>
+        <ul>
+          <li>Coupons</li>
+          <li>Blog Post</li>
+          <li>Return Policy</li>
+          <li>Join Affiliate</li>
+        </ul>
+      </div>
+      <div class="footer-col-4">
+        <h3>Follow Us</h3>
+        <ul>
+          <li>Facebook</li>
+          <li>Instagram</li>
+          <li>Twitter</li>
+          <li>YouTube</li>
+        </ul>
+      </div>
+    </div>
+    <hr>
+    <p class="copyright">© 2026 RedStore. All Rights Reserved.</p>
+  </div>
+</div>
+
+<script src="app.js"></script>
+<script>
+
+if (typeof store === "undefined") {
+  var store = {
+    getToken:    function() { return localStorage.getItem("rs_token"); },
+    getUser:     function() { try { return JSON.parse(localStorage.getItem("rs_user")); } catch(e) { return null; } },
+    setSession:  function(tok,user) { localStorage.setItem("rs_token",tok); localStorage.setItem("rs_user",JSON.stringify(user)); },
+    clearSession:function() { localStorage.removeItem("rs_token"); localStorage.removeItem("rs_user"); },
+    isLoggedIn:  function() { return !!localStorage.getItem("rs_token"); }
+  };
+}
+if (typeof cart === 'undefined' || typeof cart.remove === 'undefined') {
+  var cart = {
+    get: function() {
+      try { return JSON.parse(localStorage.getItem('rs_cart')) || []; } catch(e) { return []; }
+    },
+    save: function(items) {
+      localStorage.setItem('rs_cart', JSON.stringify(items));
+      this.updateBadge();
+    },
+    add: function(product, qty, size, color) {
+      qty = qty || 1; size = size || ''; color = color || '';
+      var items = this.get();
+      var key   = product.id + '-' + size + '-' + color;
+      var ex    = items.find(function(i) { return i.key === key; });
+      if (ex) { ex.quantity += qty; }
+      else { items.push({ key: key, productId: product.id, name: product.name, price: product.price, image: product.image || '', quantity: qty, size: size, color: color }); }
+      this.save(items);
+      this.showToast('"' + product.name + '" added to cart!');
+    },
+    remove: function(key) {
+      this.save(this.get().filter(function(i) { return i.key !== key; }));
+    },
+    update: function(key, qty) {
+      var items = this.get();
+      var item  = items.find(function(i) { return i.key === key; });
+      if (item) {
+        if (qty <= 0) { this.remove(key); return; }
+        item.quantity = qty;
+        this.save(items);
+      }
+    },
+    clear: function() { this.save([]); },
+    count: function() {
+      return this.get().reduce(function(s, i) { return s + i.quantity; }, 0);
+    },
+    subtotal: function() {
+      return this.get().reduce(function(s, i) { return s + i.price * i.quantity; }, 0);
+    },
+    updateBadge: function() {
+      var b = document.getElementById('cart-badge');
+      if (b) { var c = this.count(); b.textContent = c; b.style.display = c > 0 ? 'flex' : 'none'; }
+    },
+    showToast: function(msg) {
+      var t = document.getElementById('rs-toast');
+      if (!t) {
+        t = document.createElement('div');
+        t.id = 'rs-toast';
+        t.style.cssText = 'position:fixed;bottom:24px;right:24px;background:#ff523b;color:#fff;padding:11px 18px;border-radius:8px;font-size:13px;font-weight:600;z-index:9999;transform:translateY(60px);transition:transform .3s;font-family:Poppins,sans-serif;max-width:260px;box-shadow:0 4px 16px rgba(255,82,59,.4);';
+        document.body.appendChild(t);
+      }
+      t.textContent = msg;
+      t.style.transform = 'translateY(0)';
+      clearTimeout(t._t);
+      t._t = setTimeout(function() { t.style.transform = 'translateY(60px)'; }, 2800);
+    }
+  };
+}
+if (typeof fmt === "undefined") { var fmt = function(n) { return "$"+Number(n).toFixed(2); }; }
+if (typeof starsHTML === "undefined") { var starsHTML = function(r) { var h="";for(var i=1;i<=5;i++)h+=i<=r?'<i class="fa fa-star" style="color:#ff523b;font-size:12px;"></i>':'<i class="fa-regular fa-star" style="color:#ff523b;font-size:12px;"></i>';return h; }; }
+
+// ── Built-in product data — page works fully without server ───────────────────
+const LOCAL_PRODUCTS = [
+  { id:1,  name:'Red Printed T-Shirt',       price:50,  category:'tshirts',     rating:4.0, reviews:128, image:'images/product-1.jpg',  badge:'bestseller' },
+  { id:2,  name:'HRX Black Shoes',           price:100, category:'shoes',       rating:4.5, reviews:89,  image:'images/product-2.jpg',  badge:'trending'   },
+  { id:3,  name:'Track Pant (Grey)',          price:150, category:'pants',       rating:3.5, reviews:64,  image:'images/product-3.jpg',  badge:''           },
+  { id:4,  name:'Blue Polo T-Shirt',         price:75,  category:'tshirts',     rating:3.0, reviews:42,  image:'images/product-4.jpg',  badge:''           },
+  { id:5,  name:'High Top Shoes (White)',     price:150, category:'shoes',       rating:4.0, reviews:73,  image:'images/product-5.jpg',  badge:'new'        },
+  { id:6,  name:'Puma Roundneck T-Shirt',    price:100, category:'tshirts',     rating:4.5, reviews:156, image:'images/product-6.jpg',  badge:'bestseller' },
+  { id:7,  name:'Sports Socks (Pack of 3)',  price:50,  category:'accessories', rating:3.5, reviews:210, image:'images/product-7.jpg',  badge:''           },
+  { id:8,  name:'Black Fossil Watch',        price:250, category:'watches',     rating:3.0, reviews:38,  image:'images/product-8.jpg',  badge:'premium'    },
+  { id:9,  name:'Roadstar Watch (Black)',     price:100, category:'watches',     rating:4.0, reviews:55,  image:'images/product-9.jpg',  badge:''           },
+  { id:10, name:'Sports Shoes (Black)',      price:120, category:'shoes',       rating:4.5, reviews:99,  image:'images/product-10.jpg', badge:'trending'   },
+  { id:11, name:'Walking Shoes (White)',     price:151, category:'shoes',       rating:3.5, reviews:47,  image:'images/product-11.jpg', badge:''           },
+  { id:12, name:'Nike Track Pant',          price:79,  category:'pants',       rating:3.0, reviews:61,  image:'images/product-12.jpg', badge:''           },
+];
+
+function toggleMenu() {
+  document.getElementById('MenuItems').classList.toggle('open');
+}
+
+function starsHTML(rating) {
+  let h = '';
+  for (let i = 1; i <= 5; i++) {
+    if (rating >= i)          h += '<i class="fa fa-star"></i>';
+    else if (rating >= i-0.5) h += '<i class="fa-solid fa-star-half-stroke"></i>';
+    else                      h += '<i class="fa-regular fa-star"></i>';
+  }
+  return h;
+}
+
+function fmt(n) { return '$' + Number(n).toFixed(2); }
+
+function productCard(p) {
+  const img = p.image || 'images/product-1.jpg';
+  return `
+    <div class="col-4" onclick="location.href='products-details.html?id=${p.id}'" style="cursor:pointer;">
+      ${p.badge ? `<span class="product-badge badge-${p.badge}">${p.badge}</span>` : ''}
+      <img src="${img}" alt="${p.name}" loading="lazy"
+           onerror="this.onerror=null;this.src='images/product-1.jpg'">
+      <h4>${p.name}</h4>
+      <div class="rating">${starsHTML(p.rating)}<span class="rating-count">(${p.reviews})</span></div>
+      <p>${fmt(p.price)}</p>
+      <button class="add-to-cart-btn"
+        onclick="event.stopPropagation();
+                 cart.add({id:${p.id},name:'${p.name.replace(/'/g,"\\'")}',price:${p.price},image:'${img}'});
+                 this.textContent='Added \u2713';
+                 setTimeout(()=>this.textContent='Add to Cart',1500);">
+        Add to Cart
+      </button>
+    </div>`;
+}
+
+function renderProducts(all) {
+  const featured = all.filter(p => p.badge === 'bestseller' || p.rating >= 4.0).slice(0, 4);
+  const latest   = all.filter(p => !featured.includes(p)).slice(0, 8);
+  document.getElementById('featured-products').innerHTML =
+    (featured.length ? featured : all.slice(0,4)).map(productCard).join('');
+  document.getElementById('latest-products').innerHTML =
+    (latest.length   ? latest   : all.slice(4,8)).map(productCard).join('');
+}
+
+function renderStats(products, categories, customers) {
+  document.getElementById('stats-row').innerHTML = `
+    <div class="stat-item"><div class="num">${products}+</div><div class="label">Products</div></div>
+    <div class="stat-item"><div class="num">${categories}</div><div class="label">Categories</div></div>
+    <div class="stat-item"><div class="num">${customers}+</div><div class="label">Happy Customers</div></div>
+    <div class="stat-item"><div class="num">4.5&#9733;</div><div class="label">Avg Rating</div></div>
+  `;
+}
+
+async function loadPage() {
+  // Render built-in data IMMEDIATELY — zero waiting, always works
+  renderProducts(LOCAL_PRODUCTS);
+  renderStats(LOCAL_PRODUCTS.length, 5, 500);
+
+  // Silently upgrade with live server data if available
+  try {
+    const [featRes, statsRes] = await Promise.all([
+      fetch('/api/products/featured', { signal: AbortSignal.timeout(3000) }),
+      fetch('/api/stats',             { signal: AbortSignal.timeout(3000) })
+    ]);
+    if (featRes.ok) {
+      const products = await featRes.json();
+      if (Array.isArray(products) && products.length) renderProducts(products);
+    }
+    if (statsRes.ok) {
+      const s = await statsRes.json();
+      renderStats(s.products || LOCAL_PRODUCTS.length, s.categories || 5, s.customers || 500);
+    }
+  } catch (_) { /* server offline — local data already shown */ }
+}
+
+// Update nav if logged in
+if (typeof store !== 'undefined' && store.isLoggedIn()) {
+  const u = store.getUser();
+  if (u) {
+    const el = document.getElementById('nav-account');
+    if (el) el.textContent = u.username || 'Profile';
+  }
+}
+
+loadPage();
+</script>
+</body>
+</html>

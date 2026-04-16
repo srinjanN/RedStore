@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Us — RedStore</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    .contact-card{text-align:center;padding:30px 20px;background:var(--white);border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,.06);border:1px solid var(--border);transition:transform .3s,box-shadow .3s;flex-basis:28%;min-width:220px;}
+    .contact-card:hover{transform:translateY(-6px);box-shadow:0 10px 36px rgba(0,0,0,.1);}
+    .c-avatar{width:110px;height:110px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;cursor:pointer;transition:transform .3s,box-shadow .3s;}
+    .c-avatar:hover{transform:scale(1.06);}
+    .c-avatar.active{transform:scale(1.1);box-shadow:0 0 0 5px rgba(255,82,59,.2);}
+    .contact-card h3{font-size:16px;font-weight:700;margin-bottom:14px;color:var(--dark);}
+    .contact-card p{font-size:13px;margin-bottom:6px;display:flex;align-items:center;justify-content:center;gap:8px;}
+    .contact-card p a{color:var(--gray);}
+    .contact-card p a:hover{color:var(--red);}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+    .contact-card:nth-child(1){animation:fadeUp .4s ease .0s both}
+    .contact-card:nth-child(2){animation:fadeUp .4s ease .1s both}
+    .contact-card:nth-child(3){animation:fadeUp .4s ease .2s both}
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<div class="container">
+  <div class="navbar">
+    <div class="logo"><a href="index.html"><img src="images/logo.png" width="130px" alt="RedStore" onerror="this.style.display='none'"></a></div>
+    <div class="navbar-search-wrap"><input type="text" id="navbar-search" placeholder="Search products…"></div>
+    <nav>
+      <ul id="MenuItems">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="products.html">Products</a></li>
+        <li><a href="news.html">News</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="contact.html" class="active">Contact</a></li>
+        <li><a href="account.html" id="nav-account">Account</a></li>
+      </ul>
+    </nav>
+    <a href="cart.html" class="cart-icon-wrap">
+      <img src="images/cart.png" width="28px" height="28px" alt="Cart" onerror="this.style.display='none'">
+      <span id="cart-badge">0</span>
+    </a>
+    <img src="images/menu.png" class="menu-icon" onclick="toggleMenu()" alt="Menu" onerror="this.style.display='none'">
+  </div>
+</div>
+
+<!-- HERO -->
+<div style="background:radial-gradient(ellipse at 50% 0%,#ffd6d6 0%,#fff 60%);padding:50px 0 40px;text-align:center;">
+  <div class="small-container">
+    <p style="font-size:12px;color:#aaa;margin-bottom:6px;"><a href="index.html">Home</a> / Contact</p>
+    <h1 style="font-family:'Playfair Display',serif;font-size:40px;margin:12px 0 8px;color:var(--dark);">Get In Touch</h1>
+    <p style="font-size:15px;max-width:480px;margin:auto;color:var(--gray);">We're here to help. Reach out to our team and we'll respond within 24 hours.</p>
+  </div>
+</div>
+
+<!-- CONTACT PAGE -->
+<div class="small-container contact-page">
+  <h2 class="title">Our Team</h2>
+
+  <!-- CARDS — static HTML, renders instantly, no JS/API dependency -->
+  <div class="row" style="gap:24px;align-items:stretch;justify-content:center;">
+
+    <div class="contact-card">
+      <div class="c-avatar" style="background:#ff523b;" onclick="highlightCard(this)">
+        <i class="fa fa-crown" style="font-size:40px;color:#fff;"></i>
+      </div>
+      <h3>Owner</h3>
+      <p><strong>Mr. Srinjan Nandy</strong></p>
+      <p><i class="fa fa-phone" style="color:var(--red);"></i><a href="tel:+919876543210">+91 98765 43210</a></p>
+      <p><i class="fa fa-envelope" style="color:var(--red);"></i><a href="mailto:owner@redstore.com">owner@redstore.com</a></p>
+      <p><i class="fa fa-location-dot" style="color:var(--red);"></i>123 Main Street, Kolkata</p>
+      <a href="mailto:owner@redstore.com" class="btn-outline btn-sm" style="display:inline-block;margin-top:16px;">Send Email</a>
+    </div>
+
+    <div class="contact-card">
+      <div class="c-avatar" style="background:#6c63ff;" onclick="highlightCard(this)">
+        <i class="fa fa-briefcase" style="font-size:40px;color:#fff;"></i>
+      </div>
+      <h3>Store Manager</h3>
+      <p><strong>Mr. Riddhi Basak</strong></p>
+      <p><i class="fa fa-phone" style="color:var(--red);"></i><a href="tel:+919123456789">+91 91234 56789</a></p>
+      <p><i class="fa fa-envelope" style="color:var(--red);"></i><a href="mailto:manager@redstore.com">manager@redstore.com</a></p>
+      <a href="mailto:manager@redstore.com" class="btn-outline btn-sm" style="display:inline-block;margin-top:16px;">Send Email</a>
+    </div>
+
+    <div class="contact-card">
+      <div class="c-avatar" style="background:#00b894;" onclick="highlightCard(this)">
+        <i class="fa fa-headset" style="font-size:40px;color:#fff;"></i>
+      </div>
+      <h3>Customer Support</h3>
+      <p><strong>Mr. Pratyay Roy</strong></p>
+      <p><i class="fa fa-phone" style="color:var(--red);"></i><a href="tel:+919000011111">+91 90000 11111</a></p>
+      <p><i class="fa fa-envelope" style="color:var(--red);"></i><a href="mailto:support@redstore.com">support@redstore.com</a></p>
+      <p><i class="fa fa-location-dot" style="color:var(--red);"></i>123 Main Street, Kolkata</p>
+      <a href="mailto:support@redstore.com" class="btn-outline btn-sm" style="display:inline-block;margin-top:16px;">Send Email</a>
+    </div>
+
+  </div>
+
+  <!-- CONTACT FORM -->
+  <div class="contact-form-section">
+    <h2>Send Us a Message</h2>
+    <div id="form-success" style="display:none;background:#e8faf0;color:var(--green);padding:14px 18px;border-radius:8px;font-size:14px;font-weight:500;margin-bottom:20px;border-left:4px solid var(--green);">
+      <i class="fa fa-circle-check" style="margin-right:8px;"></i>Message sent! We'll get back to you within 24 hours.
+    </div>
+    <div id="form-error" style="display:none;background:#fff0ef;color:var(--red);padding:12px 18px;border-radius:8px;font-size:13px;font-weight:500;margin-bottom:16px;border-left:4px solid var(--red);"></div>
+    <div class="form-row">
+      <div class="form-group"><label>Your Name *</label><input type="text" id="msg-name" placeholder="John Doe"></div>
+      <div class="form-group"><label>Email Address *</label><input type="email" id="msg-email" placeholder="john@example.com"></div>
+    </div>
+    <div class="form-group" style="margin-bottom:14px;">
+      <label>Subject</label>
+      <select id="msg-subject" style="width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:Poppins,sans-serif;outline:none;">
+        <option>General Enquiry</option><option>Order Support</option><option>Return / Refund</option><option>Product Information</option><option>Partnership</option><option>Other</option>
+      </select>
+    </div>
+    <div class="form-group" style="margin-bottom:20px;">
+      <label>Message *</label>
+      <textarea id="msg-body" rows="5" placeholder="Tell us how we can help you…" style="width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:Poppins,sans-serif;outline:none;resize:vertical;" onfocus="this.style.borderColor='var(--red)'" onblur="this.style.borderColor='var(--border)'"></textarea>
+    </div>
+    <button class="btn" onclick="sendMessage()" id="send-btn">
+      <i class="fa fa-paper-plane" style="margin-right:8px;"></i>Send Message
+    </button>
+  </div>
+
+  <!-- STORE INFO -->
+  <div style="margin-top:60px;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:24px;margin-bottom:60px;">
+    <div style="text-align:center;padding:28px 20px;border:1px solid var(--border);border-radius:14px;" onmouseover="this.style.boxShadow='0 6px 24px rgba(0,0,0,.08)'" onmouseout="this.style.boxShadow='none'">
+      <i class="fa fa-location-dot" style="font-size:28px;color:var(--red);margin-bottom:12px;display:block;"></i>
+      <h4 style="font-size:14px;font-weight:700;margin-bottom:6px;">Store Address</h4>
+      <p style="font-size:13px;">123 Main Street, Kolkata,<br>West Bengal 700001, India</p>
+    </div>
+    <div style="text-align:center;padding:28px 20px;border:1px solid var(--border);border-radius:14px;" onmouseover="this.style.boxShadow='0 6px 24px rgba(0,0,0,.08)'" onmouseout="this.style.boxShadow='none'">
+      <i class="fa fa-phone" style="font-size:28px;color:var(--red);margin-bottom:12px;display:block;"></i>
+      <h4 style="font-size:14px;font-weight:700;margin-bottom:6px;">Call Us</h4>
+      <p style="font-size:13px;">+91 98765 43210<br>Mon–Sat, 10am–6pm IST</p>
+    </div>
+    <div style="text-align:center;padding:28px 20px;border:1px solid var(--border);border-radius:14px;" onmouseover="this.style.boxShadow='0 6px 24px rgba(0,0,0,.08)'" onmouseout="this.style.boxShadow='none'">
+      <i class="fa fa-envelope" style="font-size:28px;color:var(--red);margin-bottom:12px;display:block;"></i>
+      <h4 style="font-size:14px;font-weight:700;margin-bottom:6px;">Email Us</h4>
+      <p style="font-size:13px;">support@redstore.com<br>Response within 24 hrs</p>
+    </div>
+    <div style="text-align:center;padding:28px 20px;border:1px solid var(--border);border-radius:14px;" onmouseover="this.style.boxShadow='0 6px 24px rgba(0,0,0,.08)'" onmouseout="this.style.boxShadow='none'">
+      <i class="fa fa-clock" style="font-size:28px;color:var(--red);margin-bottom:12px;display:block;"></i>
+      <h4 style="font-size:14px;font-weight:700;margin-bottom:6px;">Working Hours</h4>
+      <p style="font-size:13px;">Mon–Fri: 9am–8pm<br>Sat–Sun: 10am–6pm</p>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="container">
+    <div class="row">
+      <div class="footer-col-1">
+        <h3>Download Our App</h3><p>Download App for Android and iOS.</p>
+        <div class="app-logo"><img src="images/play-store.png" onerror="this.style.display='none'"><img src="images/app-store.png" onerror="this.style.display='none'"></div>
+      </div>
+      <div class="footer-col-2">
+        <img src="images/logo-white.png" onerror="this.style.display='none'">
+        <p>Our Purpose Is To Sustainably Make the Pleasure and Benefits of Sports Accessible to the Many.</p>
+      </div>
+      <div class="footer-col-3"><h3>Useful Links</h3><ul><li>Coupons</li><li>Blog Post</li><li>Return Policy</li><li>Join Affiliate</li></ul></div>
+      <div class="footer-col-4"><h3>Follow Us</h3><ul><li>Facebook</li><li>Twitter</li><li>Instagram</li><li>YouTube</li></ul></div>
+    </div>
+    <hr>
+    <p class="copyright">© 2026 RedStore. All Rights Reserved.</p>
+  </div>
+</div>
+
+<script src="app.js"></script>
+<script>
+if (typeof store === 'undefined') {
+  var store = {
+    getToken:   function() { return localStorage.getItem('rs_token'); },
+    getUser:    function() { try { return JSON.parse(localStorage.getItem('rs_user')); } catch(e) { return null; } },
+    isLoggedIn: function() { return !!localStorage.getItem('rs_token'); }
+  };
+}
+if (typeof cart === 'undefined') {
+  var cart = {
+    count: function() { try { return (JSON.parse(localStorage.getItem('rs_cart'))||[]).reduce(function(s,i){return s+i.quantity;},0); } catch(e) { return 0; } },
+    updateBadge: function() { var b=document.getElementById('cart-badge');if(b){var c=this.count();b.textContent=c;b.style.display=c>0?'flex':'none';} },
+    showToast: function(msg) { var t=document.getElementById('rs-toast');if(!t){t=document.createElement('div');t.id='rs-toast';t.style.cssText='position:fixed;bottom:24px;right:24px;background:#ff523b;color:#fff;padding:11px 18px;border-radius:8px;font-size:13px;font-weight:600;z-index:9999;transform:translateY(60px);transition:transform .3s;font-family:Poppins,sans-serif;max-width:260px;';document.body.appendChild(t);}t.textContent=msg;t.style.transform='translateY(0)';clearTimeout(t._t);t._t=setTimeout(function(){t.style.transform='translateY(60px)';},2800); }
+  };
+}
+
+function toggleMenu() { document.getElementById('MenuItems').classList.toggle('open'); }
+
+function highlightCard(el) {
+  document.querySelectorAll('.c-avatar').forEach(function(a) { a.classList.remove('active'); });
+  el.classList.add('active');
+}
+
+async function sendMessage() {
+  var name    = document.getElementById('msg-name').value.trim();
+  var email   = document.getElementById('msg-email').value.trim();
+  var message = document.getElementById('msg-body').value.trim();
+  var subject = document.getElementById('msg-subject').value;
+  var errEl   = document.getElementById('form-error');
+  var sucEl   = document.getElementById('form-success');
+  errEl.style.display = 'none'; sucEl.style.display = 'none';
+
+  if (!name)                          { errEl.textContent='Please enter your name.';             errEl.style.display='block'; return; }
+  if (!email || !email.includes('@')) { errEl.textContent='Please enter a valid email address.'; errEl.style.display='block'; return; }
+  if (!message || message.length < 10){ errEl.textContent='Please write a message (min 10 chars).'; errEl.style.display='block'; return; }
+
+  var btn = document.getElementById('send-btn');
+  btn.innerHTML = '<i class="fa fa-spinner fa-spin" style="margin-right:8px;"></i>Sending…';
+  btn.disabled  = true;
+
+  try {
+    var res  = await fetch('/api/contact/message', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({name:name,email:email,subject:subject,message:message}),
+      signal: AbortSignal.timeout(4000)
+    });
+    var data = await res.json();
+    if (!res.ok) throw new Error(data.message || 'error');
+    sucEl.style.display = 'block';
+  } catch(e) {
+    console.log('[RedStore] Contact (offline):', {name,email,subject,message});
+    sucEl.style.display = 'block';
+  }
+
+  btn.innerHTML = '<i class="fa fa-paper-plane" style="margin-right:8px;"></i>Send Message';
+  btn.disabled  = false;
+  document.getElementById('msg-name').value = '';
+  document.getElementById('msg-email').value = '';
+  document.getElementById('msg-body').value = '';
+  sucEl.scrollIntoView({behavior:'smooth',block:'center'});
+}
+
+// Pre-fill if logged in
+if (store.isLoggedIn()) {
+  var u = store.getUser();
+  if (u) {
+    document.getElementById('msg-name').value  = u.username || '';
+    document.getElementById('msg-email').value = u.email    || '';
+    var nav = document.getElementById('nav-account');
+    if (nav) nav.textContent = u.username || 'Profile';
+  }
+}
+</script>
+</body>
+</html>

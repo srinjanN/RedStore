@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Details — RedStore</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<div class="container">
+  <div class="navbar">
+    <div class="logo"><a href="index.html"><img src="images/logo.png" width="130px"></a></div>
+    <div class="navbar-search-wrap">
+      <input type="text" id="navbar-search" placeholder="Search products…">
+    </div>
+    <nav>
+      <ul id="MenuItems">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="products.html" class="active">Products</a></li>
+        <li><a href="news.html">News</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="account.html" id="nav-account">Account</a></li>
+      </ul>
+    </nav>
+    <a href="cart.html" class="cart-icon-wrap">
+      <img src="images/cart.png" width="28px" height="28px">
+      <span id="cart-badge">0</span>
+    </a>
+    <img src="images/menu.png" class="menu-icon" onclick="toggleMenu()">
+  </div>
+</div>
+
+<!-- PRODUCT DETAIL -->
+<div class="small-container single-product" id="product-detail">
+  <!-- Loading state -->
+  <div class="row">
+    <div class="col-2">
+      <div class="skeleton" style="width:100%;aspect-ratio:1;border-radius:14px;"></div>
+      <div style="display:flex;gap:8px;margin-top:12px;">
+        <div class="skeleton" style="flex:1;aspect-ratio:1;border-radius:8px;"></div>
+        <div class="skeleton" style="flex:1;aspect-ratio:1;border-radius:8px;"></div>
+        <div class="skeleton" style="flex:1;aspect-ratio:1;border-radius:8px;"></div>
+        <div class="skeleton" style="flex:1;aspect-ratio:1;border-radius:8px;"></div>
+      </div>
+    </div>
+    <div class="col-2">
+      <div class="skeleton skel-text" style="width:40%;height:12px;"></div>
+      <div class="skeleton skel-text" style="width:80%;height:28px;margin-top:16px;"></div>
+      <div class="skeleton skel-text" style="width:30%;height:24px;margin-top:8px;"></div>
+      <div class="skeleton skel-text" style="width:60%;height:14px;margin-top:20px;"></div>
+      <div class="skeleton skel-text" style="width:50%;height:14px;margin-top:8px;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- RELATED PRODUCTS -->
+<div class="small-container">
+  <div class="section-header" id="related-header" style="display:none;">
+    <h2>Related Products</h2>
+    <a href="products.html">View All</a>
+  </div>
+  <div class="row" id="related-products"></div>
+</div>
+
+<!-- REVIEWS SECTION -->
+<div class="small-container reviews-section" id="reviews-section" style="display:none;">
+  <h2 style="font-size:20px;font-weight:700;margin-bottom:24px;">Customer Reviews</h2>
+  <div id="reviews-list"></div>
+
+  <!-- Review Form -->
+  <div class="review-form" id="review-form-wrap">
+    <h3>Write a Review</h3>
+    <div id="review-login-msg" style="display:none;">
+      <p>Please <a href="account.html" style="color:var(--red);font-weight:600;">log in</a> to write a review.</p>
+    </div>
+    <div id="review-form-inner">
+      <p style="font-size:13px;margin-bottom:10px;">Your Rating:</p>
+      <div class="star-picker" id="star-picker">
+        <i class="fa-regular fa-star" data-val="1"></i>
+        <i class="fa-regular fa-star" data-val="2"></i>
+        <i class="fa-regular fa-star" data-val="3"></i>
+        <i class="fa-regular fa-star" data-val="4"></i>
+        <i class="fa-regular fa-star" data-val="5"></i>
+      </div>
+      <textarea id="review-comment" rows="4" placeholder="Share your experience with this product…" style="width:100%;padding:12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:Poppins,sans-serif;outline:none;resize:vertical;margin-bottom:14px;" onfocus="this.style.borderColor='var(--red)'" onblur="this.style.borderColor='var(--border)'"></textarea>
+      <button class="btn" onclick="submitReview()">Submit Review</button>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="container">
+    <div class="row">
+      <div class="footer-col-1">
+        <h3>Download Our App</h3>
+        <p>Download App for Android and iOS.</p>
+        <div class="app-logo">
+          <img src="images/play-store.png"><img src="images/app-store.png">
+        </div>
+      </div>
+      <div class="footer-col-2">
+        <img src="images/logo-white.png">
+        <p>Our Purpose Is To Sustainably Make the Pleasure and Benefits of Sports Accessible to the Many.</p>
+      </div>
+      <div class="footer-col-3"><h3>Useful Links</h3><ul><li>Coupons</li><li>Blog Post</li><li>Return Policy</li><li>Join Affiliate</li></ul></div>
+      <div class="footer-col-4"><h3>Follow Us</h3><ul><li>Facebook</li><li>Instagram</li><li>Twitter</li><li>YouTube</li></ul></div>
+    </div>
+    <hr>
+    <p class="copyright">© 2026 RedStore. All Rights Reserved.</p>
+  </div>
+</div>
+
+<script src="app.js"></script>
+<script>
+
+if (typeof store === "undefined") {
+  var store = {
+    getToken:    function() { return localStorage.getItem("rs_token"); },
+    getUser:     function() { try { return JSON.parse(localStorage.getItem("rs_user")); } catch(e) { return null; } },
+    setSession:  function(tok,user) { localStorage.setItem("rs_token",tok); localStorage.setItem("rs_user",JSON.stringify(user)); },
+    clearSession:function() { localStorage.removeItem("rs_token"); localStorage.removeItem("rs_user"); },
+    isLoggedIn:  function() { return !!localStorage.getItem("rs_token"); }
+  };
+}
+if (typeof cart === 'undefined' || typeof cart.remove === 'undefined') {
+  var cart = {
+    get: function() {
+      try { return JSON.parse(localStorage.getItem('rs_cart')) || []; } catch(e) { return []; }
+    },
+    save: function(items) {
+      localStorage.setItem('rs_cart', JSON.stringify(items));
+      this.updateBadge();
+    },
+    add: function(product, qty, size, color) {
+      qty = qty || 1; size = size || ''; color = color || '';
+      var items = this.get();
+      var key   = product.id + '-' + size + '-' + color;
+      var ex    = items.find(function(i) { return i.key === key; });
+      if (ex) { ex.quantity += qty; }
+      else { items.push({ key: key, productId: product.id, name: product.name, price: product.price, image: product.image || '', quantity: qty, size: size, color: color }); }
+      this.save(items);
+      this.showToast('"' + product.name + '" added to cart!');
+    },
+    remove: function(key) {
+      this.save(this.get().filter(function(i) { return i.key !== key; }));
+    },
+    update: function(key, qty) {
+      var items = this.get();
+      var item  = items.find(function(i) { return i.key === key; });
+      if (item) {
+        if (qty <= 0) { this.remove(key); return; }
+        item.quantity = qty;
+        this.save(items);
+      }
+    },
+    clear: function() { this.save([]); },
+    count: function() {
+      return this.get().reduce(function(s, i) { return s + i.quantity; }, 0);
+    },
+    subtotal: function() {
+      return this.get().reduce(function(s, i) { return s + i.price * i.quantity; }, 0);
+    },
+    updateBadge: function() {
+      var b = document.getElementById('cart-badge');
+      if (b) { var c = this.count(); b.textContent = c; b.style.display = c > 0 ? 'flex' : 'none'; }
+    },
+    showToast: function(msg) {
+      var t = document.getElementById('rs-toast');
+      if (!t) {
+        t = document.createElement('div');
+        t.id = 'rs-toast';
+        t.style.cssText = 'position:fixed;bottom:24px;right:24px;background:#ff523b;color:#fff;padding:11px 18px;border-radius:8px;font-size:13px;font-weight:600;z-index:9999;transform:translateY(60px);transition:transform .3s;font-family:Poppins,sans-serif;max-width:260px;box-shadow:0 4px 16px rgba(255,82,59,.4);';
+        document.body.appendChild(t);
+      }
+      t.textContent = msg;
+      t.style.transform = 'translateY(0)';
+      clearTimeout(t._t);
+      t._t = setTimeout(function() { t.style.transform = 'translateY(60px)'; }, 2800);
+    }
+  };
+}
+if (typeof fmt === "undefined") { var fmt = function(n) { return "$"+Number(n).toFixed(2); }; }
+if (typeof starsHTML === "undefined") { var starsHTML = function(r) { var h="";for(var i=1;i<=5;i++)h+=i<=r?'<i class="fa fa-star" style="color:#ff523b;font-size:12px;"></i>':'<i class="fa-regular fa-star" style="color:#ff523b;font-size:12px;"></i>';return h; }; }
+
+function toggleMenu() { document.getElementById('MenuItems').classList.toggle('open'); }
+
+const productId = new URLSearchParams(window.location.search).get('id') || 1;
+let selectedSize = '';
+let selectedColor = '';
+let selectedRating = 0;
+let currentProduct = null;
+
+// Star picker
+document.querySelectorAll('#star-picker i').forEach(star => {
+  star.addEventListener('mouseover', () => highlightStars(+star.dataset.val));
+  star.addEventListener('mouseout', () => highlightStars(selectedRating));
+  star.addEventListener('click', () => { selectedRating = +star.dataset.val; highlightStars(selectedRating); });
+});
+
+function highlightStars(n) {
+  document.querySelectorAll('#star-picker i').forEach((s, i) => {
+    s.className = i < n ? 'fa fa-star active' : 'fa-regular fa-star';
+  });
+}
+
+// Built-in product data — works without the server running
+const LOCAL_PRODUCTS = [
+  { id:1,  name:'Red Printed T-Shirt',       price:50,  category:'tshirts',     rating:4.0, reviews:128, image:'images/product-1.jpg',  badge:'bestseller', stock:45, description:'Stylish red printed T-shirt with breathable fabric, perfect for casual outings and workouts.', sizes:['S','M','L','XL','XXL'], colors:['Red','White'],  userReviews:[], related:[] },
+  { id:2,  name:'HRX Black Shoes',           price:100, category:'shoes',       rating:4.5, reviews:89,  image:'images/product-2.jpg',  badge:'trending',   stock:20, description:'Premium HRX sports shoes with cushioned sole and superior grip for all-day comfort.',        sizes:['6','7','8','9','10','11'], colors:['Black'],          userReviews:[], related:[] },
+  { id:3,  name:'Track Pant (Grey)',          price:150, category:'pants',       rating:3.5, reviews:64,  image:'images/product-3.jpg',  badge:'',           stock:35, description:'Comfortable grey track pants with elastic waistband and zippered pockets.',                  sizes:['S','M','L','XL'],         colors:['Grey','Black'],   userReviews:[], related:[] },
+  { id:4,  name:'Blue Polo T-Shirt',         price:75,  category:'tshirts',     rating:3.0, reviews:42,  image:'images/product-4.jpg',  badge:'',           stock:60, description:'Classic blue polo T-shirt suitable for office and casual wear.',                             sizes:['S','M','L','XL','XXL'],   colors:['Blue','White'],   userReviews:[], related:[] },
+  { id:5,  name:'High Top Shoes (White)',     price:150, category:'shoes',       rating:4.0, reviews:73,  image:'images/product-5.jpg',  badge:'new',        stock:15, description:'Trendy white high-top sneakers with padded ankle support.',                                  sizes:['6','7','8','9','10'],      colors:['White'],          userReviews:[], related:[] },
+  { id:6,  name:'Puma Roundneck T-Shirt',    price:100, category:'tshirts',     rating:4.5, reviews:156, image:'images/product-6.jpg',  badge:'bestseller', stock:50, description:'Authentic Puma roundneck T-shirt with moisture-wicking technology.',                         sizes:['S','M','L','XL'],         colors:['Black','Navy'],   userReviews:[], related:[] },
+  { id:7,  name:'Sports Socks (Pack of 3)',  price:50,  category:'accessories', rating:3.5, reviews:210, image:'images/product-7.jpg',  badge:'',           stock:100,description:'Durable sports socks with cushioning at heel and toe. Pack of 3 pairs.',                    sizes:['Free Size'],              colors:['White','Black'],  userReviews:[], related:[] },
+  { id:8,  name:'Black Fossil Watch',        price:250, category:'watches',     rating:3.0, reviews:38,  image:'images/product-8.jpg',  badge:'premium',    stock:12, description:'Elegant Fossil watch with scratch-resistant mineral glass and genuine leather strap.',       sizes:['One Size'],               colors:['Black'],          userReviews:[], related:[] },
+  { id:9,  name:'Roadstar Watch (Black)',     price:100, category:'watches',     rating:4.0, reviews:55,  image:'images/product-9.jpg',  badge:'',           stock:18, description:'Rugged Roadstar watch with chronograph function and water resistance up to 50m.',           sizes:['One Size'],               colors:['Black','Silver'], userReviews:[], related:[] },
+  { id:10, name:'Sports Shoes (Black)',      price:120, category:'shoes',       rating:4.5, reviews:99,  image:'images/product-10.jpg', badge:'trending',   stock:25, description:'High-performance black sports shoes with breathable mesh upper.',                           sizes:['6','7','8','9','10','11'], colors:['Black','White'],  userReviews:[], related:[] },
+  { id:11, name:'Walking Shoes (White)',     price:151, category:'shoes',       rating:3.5, reviews:47,  image:'images/product-11.jpg', badge:'',           stock:30, description:'Lightweight white walking shoes with EVA midsole for all-day comfort.',                    sizes:['6','7','8','9','10'],      colors:['White','Grey'],   userReviews:[], related:[] },
+  { id:12, name:'Nike Track Pant',          price:79,  category:'pants',       rating:3.0, reviews:61,  image:'images/product-12.jpg', badge:'',           stock:40, description:'Nike track pants with Dri-FIT technology to keep you dry during workouts.',                sizes:['S','M','L','XL','XXL'],   colors:['Black','Navy'],   userReviews:[], related:[] },
+];
+
+// Enrich LOCAL_PRODUCTS with related items
+LOCAL_PRODUCTS.forEach(p => {
+  p.related = LOCAL_PRODUCTS.filter(x => x.category === p.category && x.id !== p.id).slice(0, 4);
+});
+
+async function loadProduct() {
+  let data;
+
+  try {
+    const res = await fetch(`/api/products/${productId}`, { signal: AbortSignal.timeout(3000) });
+    if (!res.ok) throw new Error('API error');
+    data = await res.json();
+  } catch (_) {
+    // Server not running — use built-in data
+    data = LOCAL_PRODUCTS.find(p => p.id === Number(productId));
+  }
+
+  if (!data) {
+    document.getElementById('product-detail').innerHTML = `
+      <div style="text-align:center;padding:60px;">
+        <i class="fa fa-triangle-exclamation" style="font-size:48px;color:#ddd;"></i>
+        <p style="margin-top:16px;color:#aaa;">Product not found.</p>
+        <a href="products.html" class="btn" style="margin-top:20px;">Browse Products</a>
+      </div>`;
+    return;
+  }
+
+  currentProduct = data;
+  document.title = `${data.name} — RedStore`;
+
+  // Thumbnail images (use gallery images or product image repeated)
+  const galleryImgs = ['images/gallery-1.jpg','images/gallery-2.jpg','images/gallery-3.jpg','images/gallery-4.jpg'];
+  const mainImg = data.image;
+
+  const inStock = data.stock > 0;
+
+  document.getElementById('product-detail').innerHTML = `
+    <div class="row">
+      <div class="col-2">
+        <img src="${mainImg}" id="ProductImg" alt="${data.name}">
+        <div class="small-img-row">
+          ${galleryImgs.map((img, i) => `
+            <div class="small-img-col">
+              <img src="${img}" class="small-img ${i===0?'active':''}" onclick="switchImg(this)" alt="Gallery ${i+1}">
+            </div>`).join('')}
+        </div>
+      </div>
+      <div class="col-2">
+        <p class="breadcrumb"><a href="index.html">Home</a> / <a href="products.html?category=${data.category}">${data.category}</a> / ${data.name}</p>
+        <h1>${data.name}</h1>
+        <div class="price-wrap">
+          <h4>${fmt(data.price)}</h4>
+          ${data.badge === 'bestseller' ? `<span class="original-price">${fmt(data.price * 1.2)}</span><span class="discount-badge">-17%</span>` : ''}
+        </div>
+        <div class="rating" style="margin:6px 0;">${starsHTML(data.rating)}<span class="rating-count" style="margin-left:6px;font-size:13px;color:#aaa;">${data.rating} (${data.reviews} reviews)</span></div>
+        <span class="stock-badge ${inStock ? 'in-stock' : 'out-stock'}">${inStock ? `✓ In Stock (${data.stock} left)` : '✗ Out of Stock'}</span>
+        <p style="margin:16px 0;font-size:14px;line-height:1.7;">${data.description}</p>
+
+        ${data.sizes?.length ? `
+        <p class="variant-label">Size</p>
+        <div class="size-options">
+          ${data.sizes.map(s => `<span class="size-opt" onclick="selectSize(this,'${s}')">${s}</span>`).join('')}
+        </div>` : ''}
+
+        ${data.colors?.length ? `
+        <p class="variant-label">Color</p>
+        <div class="color-options">
+          ${data.colors.map(c => {
+            const colorMap = {Red:'#e53935',White:'#fff',Black:'#111',Blue:'#1565c0',Grey:'#757575',Navy:'#1a237e',Silver:'#bdbdbd'};
+            return `<span class="color-dot" style="background:${colorMap[c]||'#ccc'};border:2px solid #ddd;" title="${c}" onclick="selectColor(this,'${c}')"></span>`;
+          }).join('')}
+        </div>` : ''}
+
+        <div class="qty-wrap">
+          <button class="qty-btn" onclick="changeQty(-1)">−</button>
+          <input type="number" class="qty-input" id="qty" value="1" min="1" max="${data.stock}">
+          <button class="qty-btn" onclick="changeQty(1)">+</button>
+        </div>
+
+        <div class="action-btns">
+          <button class="btn" onclick="addToCart()" ${!inStock ? 'disabled style="opacity:0.5;cursor:not-allowed;"' : ''}>
+            <i class="fa fa-cart-plus" style="margin-right:8px;"></i>Add to Cart
+          </button>
+          <button class="btn-outline" onclick="toggleWishlist()" id="wishlist-btn">
+            <i class="fa-regular fa-heart" style="margin-right:8px;"></i>Wishlist
+          </button>
+        </div>
+
+        <div style="border-top:1px solid var(--border);margin-top:16px;padding-top:16px;display:flex;gap:24px;flex-wrap:wrap;">
+          <span style="font-size:12px;color:var(--gray);"><i class="fa fa-truck" style="color:var(--red);margin-right:6px;"></i>Free delivery over $200</span>
+          <span style="font-size:12px;color:var(--gray);"><i class="fa fa-rotate-left" style="color:var(--red);margin-right:6px;"></i>30-day easy returns</span>
+          <span style="font-size:12px;color:var(--gray);"><i class="fa fa-shield-halved" style="color:var(--red);margin-right:6px;"></i>1-year warranty</span>
+        </div>
+      </div>
+    </div>`;
+
+  // Related products
+  if (data.related?.length) {
+    document.getElementById('related-header').style.display = 'flex';
+    document.getElementById('related-products').innerHTML = data.related.map(p => `
+      <div class="col-4" onclick="location.href='products-details.html?id=${p.id}'">
+        <img src="${p.image}" alt="${p.name}">
+        <h4>${p.name}</h4>
+        <div class="rating">${starsHTML(p.rating)}</div>
+        <p>${fmt(p.price)}</p>
+      </div>`).join('');
+  }
+
+  // Reviews
+  document.getElementById('reviews-section').style.display = 'block';
+  renderReviews(data.userReviews || []);
+
+  // Auth check for review form
+  if (!store.isLoggedIn()) {
+    document.getElementById('review-form-inner').style.display = 'none';
+    document.getElementById('review-login-msg').style.display = 'block';
+  }
+
+  // Wishlist state
+  updateWishlistBtn();
+}
+
+function switchImg(el) {
+  document.getElementById('ProductImg').src = el.src;
+  document.querySelectorAll('.small-img').forEach(i => i.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function changeQty(delta) {
+  const input = document.getElementById('qty');
+  const newVal = Math.max(1, Math.min(currentProduct?.stock || 99, +input.value + delta));
+  input.value = newVal;
+}
+
+function selectSize(el, size) {
+  document.querySelectorAll('.size-opt').forEach(s => s.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedSize = size;
+}
+
+function selectColor(el, color) {
+  document.querySelectorAll('.color-dot').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedColor = color;
+}
+
+function addToCart() {
+  if (!currentProduct) return;
+  // Only require size selection if there are multiple real size options
+  const realSizes = (currentProduct.sizes || []).filter(s => s !== 'One Size' && s !== 'Free Size');
+  if (realSizes.length > 0 && !selectedSize) {
+    cart.showToast('Please select a size first!');
+    // Highlight size options
+    document.querySelectorAll('.size-opt').forEach(function(s) {
+      s.style.animation = 'pulse-border 0.4s ease 2';
+    });
+    return;
+  }
+  const qty = parseInt(document.getElementById('qty').value) || 1;
+  cart.add(currentProduct, qty, selectedSize || (currentProduct.sizes && currentProduct.sizes[0]) || '', selectedColor || '');
+  // Confirm feedback on button
+  var btn = document.querySelector('[onclick="addToCart()"]');
+  if (btn) {
+    var orig = btn.innerHTML;
+    btn.innerHTML = '<i class="fa fa-check" style="margin-right:8px;"></i>Added to Cart!';
+    btn.style.background = 'var(--green)';
+    setTimeout(function() { btn.innerHTML = orig; btn.style.background = ''; }, 1800);
+  }
+}
+
+// ── Wishlist helpers (work offline via localStorage) ─────────────────────────
+function getLocalWishlist() {
+  try { return JSON.parse(localStorage.getItem('rs_local_wishlist') || '[]'); } catch(_) { return []; }
+}
+function saveLocalWishlist(list) {
+  localStorage.setItem('rs_local_wishlist', JSON.stringify(list));
+}
+function isInLocalWishlist(pid) {
+  const user = store.getUser();
+  return getLocalWishlist().some(function(w) { return w.productId === pid && w.userEmail === (user ? user.email : ''); });
+}
+
+async function toggleWishlist() {
+  if (!store.isLoggedIn()) {
+    cart.showToast('Please log in to save to wishlist');
+    setTimeout(function() { location.href = 'account.html'; }, 1500);
+    return;
+  }
+  const pid  = Number(productId);
+  const user = store.getUser();
+  let   msg  = '';
+
+  // Try API first
+  let apiOk = false;
+  try {
+    const res  = await fetch('/api/users/wishlist/' + pid, {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + store.getToken() },
+      signal: AbortSignal.timeout(3000)
+    });
+    if (res.ok) {
+      const data = await res.json();
+      msg   = data.message;
+      apiOk = true;
+    }
+  } catch (_) { /* offline */ }
+
+  // Offline wishlist toggle
+  if (!apiOk) {
+    const email = user ? user.email : '';
+    let list    = getLocalWishlist();
+    const idx   = list.findIndex(function(w) { return w.productId === pid && w.userEmail === email; });
+    if (idx !== -1) {
+      list.splice(idx, 1);
+      msg = 'Removed from wishlist';
+    } else {
+      list.push({ productId: pid, userEmail: email, name: currentProduct ? currentProduct.name : '', addedAt: new Date().toISOString() });
+      msg = 'Added to wishlist!';
+    }
+    saveLocalWishlist(list);
+  }
+
+  cart.showToast(msg);
+  updateWishlistBtn();
+}
+
+function updateWishlistBtn() {
+  const btn = document.getElementById('wishlist-btn');
+  if (!btn) return;
+
+  if (!store.isLoggedIn()) {
+    btn.innerHTML = '<i class="fa-regular fa-heart" style="margin-right:8px;"></i>Wishlist';
+    return;
+  }
+
+  // Check local wishlist first (instant, no network)
+  const inWL = isInLocalWishlist(Number(productId));
+  btn.innerHTML = '<i class="' + (inWL ? 'fa fa-heart' : 'fa-regular fa-heart') + '" style="color:' + (inWL ? 'var(--red)' : 'inherit') + ';margin-right:8px;"></i>' + (inWL ? 'In Wishlist' : 'Wishlist');
+
+  // Then try API to sync
+  if (store.getToken()) {
+    fetch('/api/users/wishlist', {
+      headers: { 'Authorization': 'Bearer ' + store.getToken() },
+      signal: AbortSignal.timeout(3000)
+    }).then(function(r) { return r.ok ? r.json() : null; })
+      .then(function(data) {
+        if (!data) return;
+        const inAPI = Array.isArray(data) && data.some(function(p) { return p.id === Number(productId); });
+        btn.innerHTML = '<i class="' + (inAPI ? 'fa fa-heart' : 'fa-regular fa-heart') + '" style="color:' + (inAPI ? 'var(--red)' : 'inherit') + ';margin-right:8px;"></i>' + (inAPI ? 'In Wishlist' : 'Wishlist');
+      }).catch(function() {});
+  }
+}
+
+function renderReviews(reviews) {
+  const container = document.getElementById('reviews-list');
+  if (!reviews.length) {
+    container.innerHTML = '<p style="color:#aaa;font-size:14px;margin-bottom:20px;">No reviews yet. Be the first to review!</p>';
+    return;
+  }
+  container.innerHTML = reviews.map(r => `
+    <div class="review-card">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div style="width:36px;height:36px;background:var(--red);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:14px;">${r.username.charAt(0).toUpperCase()}</div>
+        <div>
+          <span class="reviewer">${r.username}</span>
+          <span class="review-date">${new Date(r.createdAt).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}</span>
+          <div class="rating" style="margin-top:2px;">${starsHTML(r.rating)}</div>
+        </div>
+      </div>
+      <p class="comment">${r.comment}</p>
+    </div>`).join('');
+}
+
+async function submitReview() {
+  if (!selectedRating) { cart.showToast('Please select a star rating'); return; }
+  const comment = document.getElementById('review-comment').value.trim();
+  if (!comment) { cart.showToast('Please write a comment'); return; }
+
+  let submitted = false;
+
+  try {
+    const res = await fetch(`/api/products/${productId}/review`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${store.getToken()}` },
+      body: JSON.stringify({ rating: selectedRating, comment }),
+      signal: AbortSignal.timeout(3000)
+    });
+    submitted = res.ok;
+  } catch (_) {
+    submitted = true; // Offline — show optimistic UI
+  }
+
+  if (submitted) {
+    cart.showToast('Review submitted! Thank you.');
+    document.getElementById('review-comment').value = '';
+    // Add review to UI immediately (optimistic)
+    const user = store.getUser();
+    const newReview = {
+      username: user?.username || 'You',
+      rating: selectedRating,
+      comment,
+      createdAt: new Date().toISOString()
+    };
+    const existing = document.getElementById('reviews-list');
+    const noReviewMsg = existing.querySelector('p');
+    if (noReviewMsg) noReviewMsg.remove();
+    existing.insertAdjacentHTML('afterbegin',
+      `<div class="review-card">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div style="width:36px;height:36px;background:var(--red);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:14px;">${newReview.username.charAt(0).toUpperCase()}</div>
+          <div>
+            <span class="reviewer">${newReview.username}</span>
+            <span class="review-date" style="margin-left:8px;font-size:11px;color:#bbb;">just now</span>
+            <div class="rating" style="margin-top:2px;">${starsHTML(newReview.rating)}</div>
+          </div>
+        </div>
+        <p class="comment">${newReview.comment}</p>
+      </div>`
+    );
+    selectedRating = 0;
+    highlightStars(0);
+  } else {
+    cart.showToast(data.message || 'Failed to submit review');
+  }
+}
+
+if (store.isLoggedIn()) {
+  const u = store.getUser();
+  document.getElementById('nav-account').textContent = u?.username || 'Profile';
+}
+
+loadProduct();
+</script>
+</body>
+</html>
